@@ -361,5 +361,4 @@ renderHTMLElemens('.films-list', createButtonShowMore());
 renderHTMLElemens('.films', createTopRated());
 renderHTMLElemens('.films', createMostCommented());
 renderHTMLElemens('.footer__statistics', createFooterStatistic());
-// renderHTMLElemens('.footer', createFilmDetailsPopup(), 'afterend');
-
+renderHTMLElemens('.footer', createFilmDetailsPopup(), 'afterend');
