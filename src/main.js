@@ -8,6 +8,7 @@ import {createTopRated} from "./components/top-rated.js";
 import {createMostCommented} from "./components/most-commented.js";
 import {createFooterStatistic} from "./components/footer-statistic.js";
 import {createFilmDetailsPopup} from "./components/film-details-popup.js";
+import "./mock/const.js";
 
 const renderHTMLElemens = (className, html, position = `beforeend`) => {
   const place = document.querySelector(className);
