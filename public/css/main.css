@@ -1075,3 +1075,7 @@ button {
   padding-top: 50px;
   padding-bottom: 50px;
 }
+
+.film-card__click {
+  cursor: pointer;
+}

@@ -12,6 +12,13 @@ const commentsEmotion = [
   `smile`, `sleeping`, `puke`, `angry`
 ];
 
+const emotionImg = [
+  `./images/emoji/smile.png`,
+  `./images/emoji/sleeping.png`,
+  `./images/emoji/puke.png`,
+  `./images/emoji/angry.png`,
+];
+
 const commentsAuthor = [
   `Ahilles`,
   `Gector`,
@@ -21,7 +28,7 @@ const commentsAuthor = [
 ];
 
 const commentsDate = [
-  `2021/12/18 23:28`,
+  `2021/12/22 23:28`,
   `2021/11/30 23:28`,
   `2021/12/18 08:36`,
   `2021/09/01 11:36`,
@@ -38,6 +45,7 @@ const getRandomComment = () => {
       emotion: commentsEmotion[getRandomIndexArray(0, commentsEmotion.length)],
       author: commentsAuthor[getRandomIndexArray(0, commentsAuthor.length)],
       date: commentsDate[getRandomIndexArray(0, commentsDate.length)],
+      img: emotionImg[getRandomIndexArray(0, emotionImg.length)]
     };
     comments.push(comment);
   }
