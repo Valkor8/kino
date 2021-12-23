@@ -11,8 +11,10 @@ import {createFilmDetailsPopup} from "./components/film-details-popup.js";
 import "./mock/random-films.js";
 import {renderRandomFilm} from "./mock/random-films.js";
 
-const RADOM_FILM = 15;
-
+const RADOM_FILM = 20;
+const FILM_CARDS_START = 0;
+const FILM_CARDS_AMOUNT = 5;
+const FILM_CARD_SHOW_BY_BUTTON = 5;
 
 const getRandomFilmsArray = () => {
   const films = [];
@@ -35,7 +37,10 @@ renderHTMLElemens(`.header`, createProfileRating());
 renderHTMLElemens(`.main`, createSiteMenuAndStats());
 renderHTMLElemens(`.main`, createSort());
 renderHTMLElemens(`.main`, createSectionFilms());
-renderHTMLElemens(`.films-list__container`, createFilmCard(randomFilms).join(`\n`));
+randomFilms.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT).forEach((item) => {
+  renderHTMLElemens(`.films-list__container`, createFilmCard(item));
+});
+
 renderHTMLElemens(`.films-list`, createButtonShowMore());
 renderHTMLElemens(`.films`, createTopRated());
 renderHTMLElemens(`.films`, createMostCommented());
@@ -57,7 +62,16 @@ const showPopup = (evt) => {
 
 document.addEventListener(`click`, showPopup);
 
+let filmAmount = FILM_CARDS_AMOUNT;
+
 const buttonShowMore = document.querySelector(`.films-list__show-more`);
 buttonShowMore.addEventListener(`click`, () => {
-  renderHTMLElemens(`.films-list__container`, createFilmCard(randomFilms).join(`\n`));
+  let prevFilmCount = filmAmount;
+  filmAmount += FILM_CARD_SHOW_BY_BUTTON;
+  randomFilms.slice(prevFilmCount, filmAmount).forEach((item) => {
+    renderHTMLElemens(`.films-list__container`, createFilmCard(item));
+    if (filmAmount >= randomFilms.length) {
+      buttonShowMore.remove();
+    }
+  });
 });
