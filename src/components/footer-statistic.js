@@ -1,6 +1,10 @@
+import {getRandomInt} from "../mock/random-generator.js";
+
+const totalFilms = getRandomInt(1000, 100000);
+
 const createFooterStatistic = () => {
   return (
-    `<p>130 291 movies inside</p>`
+    `<p>${totalFilms} movies inside</p>`
   );
 };
 

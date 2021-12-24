@@ -128,8 +128,19 @@ const renderRandomFilm = () => {
     director: directors[randomIndex],
     actors: actors[randomIndex],
     country: countries[randomIndex],
-    ageRating: ageRatings[randomIndex]
+    ageRating: ageRatings[randomIndex],
   };
 };
 
-export {renderRandomFilm};
+const RANDOM_FILM = 20;
+
+const getRandomFilmsArray = () => {
+  const randomFilms = [];
+  for (let i = 0; i < RANDOM_FILM; i++) {
+    randomFilms.push(renderRandomFilm());
+    randomFilms[i].id = i;
+  }
+  return randomFilms;
+};
+
+export {getRandomFilmsArray};

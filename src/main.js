@@ -4,29 +4,25 @@ import {createSort} from "./components/site-menu-and-sort.js";
 import {createSectionFilms} from "./components/film-card.js";
 import {createFilmCard} from "./components/film-card.js";
 import {createButtonShowMore} from "./components/film-card.js";
+import {createTopRatedContainer} from "./components/top-rated.js";
 import {createTopRated} from "./components/top-rated.js";
+import {createMostCommentedContainer} from "./components/most-commented.js";
 import {createMostCommented} from "./components/most-commented.js";
 import {createFooterStatistic} from "./components/footer-statistic.js";
-import {createFilmDetailsPopup} from "./components/film-details-popup.js";
+import {showPopup} from "./components/film-details-popup.js";
 import "./mock/random-films.js";
-import {renderRandomFilm} from "./mock/random-films.js";
+import "./components/film-card.js";
+import {getRandomFilmsArray} from "./mock/random-films.js";
+import {buttonAddToWatchlistHandlerFn} from "./components/film-card.js";
+import {removeButtonAddToWatchlistHandlerFn} from "./components/film-card.js";
+import {filter} from "./components/site-menu-and-sort.js";
 
-const RADOM_FILM = 20;
 const FILM_CARDS_START = 0;
 const FILM_CARDS_AMOUNT = 5;
 const FILM_CARD_SHOW_BY_BUTTON = 5;
 
-const getRandomFilmsArray = () => {
-  const films = [];
-  for (let i = 0; i < RADOM_FILM; i++) {
-    films.push(renderRandomFilm());
-    films[i].id = i;
-  }
-  return films;
-};
-
 const randomFilms = getRandomFilmsArray();
-console.log(randomFilms);
+// console.log(randomFilms);
 
 const renderHTMLElemens = (className, html, position = `beforeend`) => {
   const place = document.querySelector(className);
@@ -34,38 +30,39 @@ const renderHTMLElemens = (className, html, position = `beforeend`) => {
 };
 
 renderHTMLElemens(`.header`, createProfileRating());
-renderHTMLElemens(`.main`, createSiteMenuAndStats());
+renderHTMLElemens(`.main`, createSiteMenuAndStats(filter));
 renderHTMLElemens(`.main`, createSort());
 renderHTMLElemens(`.main`, createSectionFilms());
 randomFilms.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT).forEach((item) => {
   renderHTMLElemens(`.films-list__container`, createFilmCard(item));
 });
-
 renderHTMLElemens(`.films-list`, createButtonShowMore());
-renderHTMLElemens(`.films`, createTopRated());
-renderHTMLElemens(`.films`, createMostCommented());
+renderHTMLElemens(`.films`, createTopRatedContainer());
+randomFilms
+  .slice()
+  .sort((a, b) => b.rating - a.rating)
+  .slice(0, 2)
+  .forEach((item) => renderHTMLElemens(`#top-rated .films-list__container`, createTopRated(item)));
+
+renderHTMLElemens(`.films`, createMostCommentedContainer());
+
+randomFilms
+  .slice()
+  .sort((a, b) => b.comments.length - a.comments.length)
+  .slice(0, 2)
+  .forEach((item) => renderHTMLElemens(`#most-commented .films-list__container`, createMostCommented(item)));
+
 renderHTMLElemens(`.footer__statistics`, createFooterStatistic());
 
-const showPopup = (evt) => {
-  if (evt.target.classList.contains(`film-card__click`)) {
-    randomFilms.forEach((item) => {
-      if (+evt.target.dataset.id === item.id) {
-        if (document.querySelector(`#film-details`)) {
-          const filmDetails = document.querySelector(`#film-details`);
-          filmDetails.remove();
-        }
-        renderHTMLElemens(`.footer`, createFilmDetailsPopup(item), `afterend`);
-      }
-    });
-  }
-};
-
 document.addEventListener(`click`, showPopup);
+
+buttonAddToWatchlistHandlerFn();
 
 let filmAmount = FILM_CARDS_AMOUNT;
 
 const buttonShowMore = document.querySelector(`.films-list__show-more`);
 buttonShowMore.addEventListener(`click`, () => {
+  removeButtonAddToWatchlistHandlerFn();
   let prevFilmCount = filmAmount;
   filmAmount += FILM_CARD_SHOW_BY_BUTTON;
   randomFilms.slice(prevFilmCount, filmAmount).forEach((item) => {
@@ -74,4 +71,7 @@ buttonShowMore.addEventListener(`click`, () => {
       buttonShowMore.remove();
     }
   });
+  buttonAddToWatchlistHandlerFn();
 });
+
+export {randomFilms, renderHTMLElemens};

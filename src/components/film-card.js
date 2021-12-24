@@ -3,10 +3,7 @@ const createSectionFilms = () => {
     `<section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-        <div class="films-list__container">
-        </div>
-
+        <div class="films-list__container"></div>
       </section>
     </section>`
   );
@@ -32,13 +29,34 @@ const createFilmCard = (film) => {
         <p class="film-card__description">${film.description}</p>
         <a class="film-card__comments film-card__click" data-id="${film.id}">${film.comments.length} comments</a>
         <form class="film-card__controls">
-          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-          <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" data-id="${film.id}">Add to watchlist</button>
+          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched" data-id="${film.id}">Mark as watched</button>
+          <button class="film-card__controls-item button film-card__controls-item--favorite" data-id="${film.id}">Mark as favorite</button>
         </form>
     </article>`
   );
 };
 
+// const buttonMarkAsWathed = document.querySelector(`.film-card__controls-item--mark-as-watched`);
+// const buttonAddToFavorites = document.querySelector(`.film-card__controls-item--favorite`);
 
-export {createButtonShowMore, createSectionFilms, createFilmCard};
+const buttonAddToWatchlistHandler = (evt) => {
+  evt.preventDefault();
+  // alert(evt.target.dataset.id);
+};
+
+const buttonAddToWatchlistHandlerFn = () => {
+  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
+  buttonAddToWatchlist.forEach((item) => {
+    item.addEventListener(`click`, buttonAddToWatchlistHandler);
+  });
+};
+
+const removeButtonAddToWatchlistHandlerFn = () => {
+  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
+  buttonAddToWatchlist.forEach((item) => {
+    item.removeEventListener(`click`, buttonAddToWatchlistHandler);
+  });
+};
+
+export {createButtonShowMore, createSectionFilms, createFilmCard, buttonAddToWatchlistHandlerFn, removeButtonAddToWatchlistHandlerFn};

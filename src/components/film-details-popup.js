@@ -1,3 +1,5 @@
+import {randomFilms, renderHTMLElemens} from "../main.js";
+
 const createFilmDetailsPopup = (film) => {
   const comments = film.comments;
   popupCloseHandler();
@@ -140,6 +142,20 @@ const renderComments = (comments) => {
   return arrComments;
 };
 
+const showPopup = (evt) => {
+  if (evt.target.classList.contains(`film-card__click`)) {
+    randomFilms.forEach((item) => {
+      if (+evt.target.dataset.id === item.id) {
+        if (document.querySelector(`#film-details`)) {
+          const filmDetails = document.querySelector(`#film-details`);
+          filmDetails.remove();
+        }
+        renderHTMLElemens(`.footer`, createFilmDetailsPopup(item), `afterend`);
+      }
+    });
+  }
+};
+
 const popupRemove = (evt) => {
   const filmDetails = document.querySelector(`#film-details`);
   if (evt.target.classList.contains(`film-details__close-btn`)) {
@@ -149,6 +165,6 @@ const popupRemove = (evt) => {
 
 const popupCloseHandler = () => document.addEventListener(`click`, popupRemove);
 
-export {createFilmDetailsPopup};
+export {createFilmDetailsPopup, showPopup};
 
 // ${film.comments.forEach((item) => renderComments(item))}
