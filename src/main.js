@@ -1,6 +1,6 @@
 import {createProfileRating} from "./components/profile-rating.js";
-import {createSiteMenuAndStats} from "./components/site-menu-and-sort.js";
-import {createSort} from "./components/site-menu-and-sort.js";
+import {SiteMenu} from "./components/site-menu-and-stats.js";
+import {createSort} from "./components/sort.js";
 import {createSectionFilms} from "./components/film-card.js";
 import {createFilmCard} from "./components/film-card.js";
 import {createButtonShowMore} from "./components/film-card.js";
@@ -15,7 +15,8 @@ import "./components/film-card.js";
 import {getRandomFilmsArray} from "./mock/random-films.js";
 import {buttonAddToWatchlistHandlerFn} from "./components/film-card.js";
 import {removeButtonAddToWatchlistHandlerFn} from "./components/film-card.js";
-import {filter} from "./components/site-menu-and-sort.js";
+import {render, RenderPosition} from "./util.js";
+import {filter} from "./mock/filter.js";
 
 const FILM_CARDS_START = 0;
 const FILM_CARDS_AMOUNT = 5;
@@ -24,13 +25,15 @@ const FILM_CARD_SHOW_BY_BUTTON = 5;
 const randomFilms = getRandomFilmsArray();
 // console.log(randomFilms);
 
-const renderHTMLElemens = (className, html, position = `beforeend`) => {
-  const place = document.querySelector(className);
+const renderHTMLElemens = (container, html, position = `beforeend`) => {
+  const place = document.querySelector(container);
   place.insertAdjacentHTML(position, html);
 };
 
+
 renderHTMLElemens(`.header`, createProfileRating());
-renderHTMLElemens(`.main`, createSiteMenuAndStats(filter));
+// renderHTMLElemens(`.main`, createSiteMenuAndStats(filter));
+render(`.main`, new SiteMenu(filter).getElement());
 renderHTMLElemens(`.main`, createSort());
 renderHTMLElemens(`.main`, createSectionFilms());
 randomFilms.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT).forEach((item) => {

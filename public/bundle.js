@@ -2,9 +2,9 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/film-crad.js":
+/***/ "./src/components/film-card.js":
 /*!*************************************!*\
-  !*** ./src/components/film-crad.js ***!
+  !*** ./src/components/film-card.js ***!
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -12,41 +12,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createButtonShowMore": () => (/* binding */ createButtonShowMore),
 /* harmony export */   "createSectionFilms": () => (/* binding */ createSectionFilms),
-/* harmony export */   "createFilmCard": () => (/* binding */ createFilmCard)
+/* harmony export */   "createFilmCard": () => (/* binding */ createFilmCard),
+/* harmony export */   "buttonAddToWatchlistHandlerFn": () => (/* binding */ buttonAddToWatchlistHandlerFn),
+/* harmony export */   "removeButtonAddToWatchlistHandlerFn": () => (/* binding */ removeButtonAddToWatchlistHandlerFn)
 /* harmony export */ });
 const createSectionFilms = () => {
   return (
     `<section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-        <div class="films-list__container">
-        </div>
-
+        <div class="films-list__container"></div>
       </section>
     </section>`
-  );
-};
-
-const createFilmCard = () => {
-  return (
-    `<article class="film-card">
-      <h3 class="film-card__title">The Dance of Life</h3>
-      <p class="film-card__rating">8.3</p>
-      <p class="film-card__info">
-        <span class="film-card__year">1929</span>
-        <span class="film-card__duration">1h 55m</span>
-        <span class="film-card__genre">Musical</span>
-      </p>
-      <img src="./images/posters/the-dance-of-life.jpg" alt="" class="film-card__poster">
-      <p class="film-card__description">Burlesque comic Ralph "Skid" Johnson (Skelly), and specialty dancer Bonny Lee King (Carroll), end up together on a cold, rainy night at a tr…</p>
-      <a class="film-card__comments">5 comments</a>
-      <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-      </form>
-    </article>`
   );
 };
 
@@ -54,6 +31,50 @@ const createButtonShowMore = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
+};
+
+const createFilmCard = (film) => {
+  return (
+    `<article class="film-card">
+        <h3 class="film-card__title film-card__click" data-id="${film.id}">${film.film}</h3>
+        <p class="film-card__rating">${film.rating}</p>
+        <p class="film-card__info">
+          <span class="film-card__year">${film.filmYear.year}</span>
+          <span class="film-card__duration">${film.filmDuration}</span>
+          <span class="film-card__genre">${film.filmGenre.join(`, `)}</span>
+        </p>
+        <img src="${film.poster}" alt="" class="film-card__poster film-card__click" data-id="${film.id}">
+        <p class="film-card__description">${film.description}</p>
+        <a class="film-card__comments film-card__click" data-id="${film.id}">${film.comments.length} comments</a>
+        <form class="film-card__controls">
+          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" data-id="${film.id}">Add to watchlist</button>
+          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched" data-id="${film.id}">Mark as watched</button>
+          <button class="film-card__controls-item button film-card__controls-item--favorite" data-id="${film.id}">Mark as favorite</button>
+        </form>
+    </article>`
+  );
+};
+
+// const buttonMarkAsWathed = document.querySelector(`.film-card__controls-item--mark-as-watched`);
+// const buttonAddToFavorites = document.querySelector(`.film-card__controls-item--favorite`);
+
+const buttonAddToWatchlistHandler = (evt) => {
+  evt.preventDefault();
+  // alert(evt.target.dataset.id);
+};
+
+const buttonAddToWatchlistHandlerFn = () => {
+  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
+  buttonAddToWatchlist.forEach((item) => {
+    item.addEventListener(`click`, buttonAddToWatchlistHandler);
+  });
+};
+
+const removeButtonAddToWatchlistHandlerFn = () => {
+  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
+  buttonAddToWatchlist.forEach((item) => {
+    item.removeEventListener(`click`, buttonAddToWatchlistHandler);
+  });
 };
 
 
@@ -69,11 +90,17 @@ const createButtonShowMore = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createFilmDetailsPopup": () => (/* binding */ createFilmDetailsPopup)
+/* harmony export */   "createFilmDetailsPopup": () => (/* binding */ createFilmDetailsPopup),
+/* harmony export */   "showPopup": () => (/* binding */ showPopup)
 /* harmony export */ });
-const createFilmDetailsPopup = () => {
+/* harmony import */ var _main_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../main.js */ "./src/main.js");
+
+
+const createFilmDetailsPopup = (film) => {
+  const comments = film.comments;
+  popupCloseHandler();
   return (
-    `<section class="film-details visually-hidden">
+    `<section class="film-details" id="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="form-details__top-container">
           <div class="film-details__close">
@@ -81,27 +108,27 @@ const createFilmDetailsPopup = () => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+              <img class="film-details__poster-img" src="${film.poster}" alt="">
 
-              <p class="film-details__age">18+</p>
+              <p class="film-details__age">${film.ageRating}</p>
             </div>
 
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">The Great Flamarion</h3>
-                  <p class="film-details__title-original">Original: The Great Flamarion</p>
+                  <h3 class="film-details__title">${film.film}</h3>
+                  <p class="film-details__title-original">Original: ${film.film}</p>
                 </div>
 
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">8.9</p>
+                  <p class="film-details__total-rating">${film.rating}</p>
                 </div>
               </div>
 
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">Anthony Mann</td>
+                  <td class="film-details__cell">${film.director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
@@ -109,31 +136,30 @@ const createFilmDetailsPopup = () => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                  <td class="film-details__cell">${film.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">30 March 1945</td>
+                  <td class="film-details__cell">${film.filmYear.date} ${film.filmYear.year}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">1h 18m</td>
+                  <td class="film-details__cell">${film.filmDuration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">USA</td>
+                  <td class="film-details__cell">${film.country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${film.filmGenre.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
-                    <span class="film-details__genre">Drama</span>
-                    <span class="film-details__genre">Film-Noir</span>
-                    <span class="film-details__genre">Mystery</span></td>
+                    <span class="film-details__genre">${film.filmGenre.join(`  `)}</span>
+                  </td>
                 </tr>
               </table>
 
               <p class="film-details__film-description">
-                The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
+                ${film.description}
               </p>
             </div>
           </div>
@@ -152,63 +178,10 @@ const createFilmDetailsPopup = () => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
-
-            <ul class="film-details__comments-list">
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Interesting setting and a good cast</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
-                    <span class="film-details__comment-day">2019/12/31 23:59</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji-sleeping">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Booooooooooring</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji-puke">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Very very old. Meh</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji-angry">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">Today</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-            </ul>
-
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          <ul class="film-details__comments-list">
+            ${renderComments(comments).join(`\n`)}
+          </ul>
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
 
@@ -245,7 +218,52 @@ const createFilmDetailsPopup = () => {
   );
 };
 
+const renderComments = (comments) => {
+  const arrComments = [];
+  comments.forEach((comment) => {
+    arrComments.push(`<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="${comment.img}" width="55" height="55" alt="emoji-${comment.commentsEmotion}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${comment.text}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${comment.author}</span>
+          <span class="film-details__comment-day">${comment.date}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`);
+  });
+  return arrComments;
+};
 
+const showPopup = (evt) => {
+  if (evt.target.classList.contains(`film-card__click`)) {
+    _main_js__WEBPACK_IMPORTED_MODULE_0__.randomFilms.forEach((item) => {
+      if (+evt.target.dataset.id === item.id) {
+        if (document.querySelector(`#film-details`)) {
+          const filmDetails = document.querySelector(`#film-details`);
+          filmDetails.remove();
+        }
+        (0,_main_js__WEBPACK_IMPORTED_MODULE_0__.renderHTMLElemens)(`.footer`, createFilmDetailsPopup(item), `afterend`);
+      }
+    });
+  }
+};
+
+const popupRemove = (evt) => {
+  const filmDetails = document.querySelector(`#film-details`);
+  if (evt.target.classList.contains(`film-details__close-btn`)) {
+    filmDetails.remove();
+  }
+};
+
+const popupCloseHandler = () => document.addEventListener(`click`, popupRemove);
+
+
+
+// ${film.comments.forEach((item) => renderComments(item))}
 
 
 /***/ }),
@@ -260,9 +278,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createFooterStatistic": () => (/* binding */ createFooterStatistic)
 /* harmony export */ });
+/* harmony import */ var _mock_random_generator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../mock/random-generator.js */ "./src/mock/random-generator.js");
+
+
+const totalFilms = (0,_mock_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomInt)(1000, 100000);
+
 const createFooterStatistic = () => {
   return (
-    `<p>130 291 movies inside</p>`
+    `<p>${totalFilms} movies inside</p>`
   );
 };
 
@@ -279,51 +302,37 @@ const createFooterStatistic = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createMostCommentedContainer": () => (/* binding */ createMostCommentedContainer),
 /* harmony export */   "createMostCommented": () => (/* binding */ createMostCommented)
 /* harmony export */ });
-const createMostCommented = () => {
+const createMostCommentedContainer = () => {
   return (
-    `<section class="films-list--extra">
+    `<section class="films-list--extra" id="most-commented">
       <h2 class="films-list__title">Most commented</h2>
-
-      <div class="films-list__container">
-        <article class="film-card">
-          <h3 class="film-card__title">Santa Claus Conquers the Martians</h3>
-          <p class="film-card__rating">2.3</p>
-          <p class="film-card__info">
-            <span class="film-card__year">1964</span>
-            <span class="film-card__duration">1h 21m</span>
-            <span class="film-card__genre">Comedy</span>
-          </p>
-          <img src="./images/posters/santa-claus-conquers-the-martians.jpg" alt="" class="film-card__poster">
-          <p class="film-card__description">The Martians Momar ("Mom Martian") and Kimar ("King Martian") are worried that their children Girmar ("Girl Martian") and Bomar ("Boy Marti…</p>
-          <a class="film-card__comments">465 comments</a>
-          <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite film-card__controls-item--active">Mark as favorite</button>
-          </form>
-        </article>
-
-        <article class="film-card">
-          <h3 class="film-card__title">Made for Each Other</h3>
-          <p class="film-card__rating">5.8</p>
-          <p class="film-card__info">
-            <span class="film-card__year">1939</span>
-            <span class="film-card__duration">1h 32m</span>
-            <span class="film-card__genre">Comedy</span>
-          </p>
-          <img src="./images/posters/made-for-each-other.png" alt="" class="film-card__poster">
-          <p class="film-card__description">John Mason (James Stewart) is a young, somewhat timid attorney in New York City. He has been doing his job well, and he has a chance of bei…</p>
-          <a class="film-card__comments">56 comments</a>
-          <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-          </form>
-        </article>
-      </div>
+      <div class="films-list__container"></div>
     </section>`
+  );
+};
+
+const createMostCommented = (film) => {
+  return (
+    `<article class="film-card">
+        <h3 class="film-card__title film-card__click" data-id="${film.id}">${film.film}</h3>
+        <p class="film-card__rating">${film.rating}</p>
+        <p class="film-card__info">
+          <span class="film-card__year">${film.filmYear.year}</span>
+          <span class="film-card__duration">${film.filmDuration}</span>
+          <span class="film-card__genre">${film.filmGenre.join(`, `)}</span>
+        </p>
+        <img src="${film.poster}" alt="" class="film-card__poster film-card__click" data-id="${film.id}">
+        <p class="film-card__description">${film.description}</p>
+        <a class="film-card__comments film-card__click" data-id="${film.id}">${film.comments.length} comments</a>
+        <form class="film-card__controls">
+          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" data-id="${film.id}">Add to watchlist</button>
+          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched" data-id="${film.id}">Mark as watched</button>
+          <button class="film-card__controls-item button film-card__controls-item--favorite" data-id="${film.id}">Mark as favorite</button>
+        </form>
+    </article>`
   );
 };
 
@@ -342,10 +351,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createProfileRating": () => (/* binding */ createProfileRating)
 /* harmony export */ });
+/* harmony import */ var _mock_random_generator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../mock/random-generator.js */ "./src/mock/random-generator.js");
+
+
+const profileRating = (0,_mock_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomInt)(0, 100);
+
+const getRandomProfileRating = (rating) => {
+  if (rating >= 1 && rating <= 10) {
+    return `Novice`;
+  } else if (rating >= 11 && rating <= 20) {
+    return `Fan`;
+  } else if (rating >= 21) {
+    return `Movie Buff`;
+  } else {
+    return ``;
+  }
+};
+
 const createProfileRating = () => {
   return (
     `<section class="header__profile profile">
-      <p class="profile__rating">Movie Buff</p>
+      <p class="profile__rating">${getRandomProfileRating(profileRating)}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
   );
@@ -356,31 +382,69 @@ const createProfileRating = () => {
 
 /***/ }),
 
-/***/ "./src/components/site-menu-and-sort.js":
-/*!**********************************************!*\
-  !*** ./src/components/site-menu-and-sort.js ***!
-  \**********************************************/
+/***/ "./src/components/site-menu-and-stats.js":
+/*!***********************************************!*\
+  !*** ./src/components/site-menu-and-stats.js ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createSiteMenuAndStats": () => (/* binding */ createSiteMenuAndStats),
-/* harmony export */   "createSort": () => (/* binding */ createSort)
+/* harmony export */   "SiteMenu": () => (/* binding */ SiteMenu)
 /* harmony export */ });
-const createSiteMenuAndStats = () => {
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util.js */ "./src/util.js");
+
+
+const createSiteMenuAndStats = (obj) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
         <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${obj.watchlist}</span></a>
+        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${obj.history}</span></a>
+        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${obj.favorites}</span></a>
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`
   );
 };
 
+class SiteMenu {
+  constructor(obj) {
+    this._obj = obj;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuAndStats(this._obj);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.createElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/components/sort.js":
+/*!********************************!*\
+  !*** ./src/components/sort.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createSort": () => (/* binding */ createSort)
+/* harmony export */ });
 const createSort = () => {
   return (
     `<ul class="sort">
@@ -390,8 +454,6 @@ const createSort = () => {
     </ul>`
   );
 };
-
-
 
 
 /***/ }),
@@ -404,55 +466,460 @@ const createSort = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createTopRatedContainer": () => (/* binding */ createTopRatedContainer),
 /* harmony export */   "createTopRated": () => (/* binding */ createTopRated)
 /* harmony export */ });
-const createTopRated = () => {
+const createTopRatedContainer = () => {
   return (
-    `<section class="films-list--extra">
+    `<section class="films-list--extra" id="top-rated">
       <h2 class="films-list__title">Top rated</h2>
-
-      <div class="films-list__container">
-        <article class="film-card">
-          <h3 class="film-card__title">The Man with the Golden Arm</h3>
-          <p class="film-card__rating">9.0</p>
-          <p class="film-card__info">
-            <span class="film-card__year">1955</span>
-            <span class="film-card__duration">1h 59m</span>
-            <span class="film-card__genre">Drama</span>
-          </p>
-          <img src="./images/posters/the-man-with-the-golden-arm.jpg" alt="" class="film-card__poster">
-          <p class="film-card__description">Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…</p>
-          <a class="film-card__comments">18 comments</a>
-          <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched  film-card__controls-item--active">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-          </form>
-        </article>
-
-        <article class="film-card">
-          <h3 class="film-card__title">The Great Flamarion</h3>
-          <p class="film-card__rating">8.9</p>
-          <p class="film-card__info">
-            <span class="film-card__year">1945</span>
-            <span class="film-card__duration">1h 18m</span>
-            <span class="film-card__genre">Mystery</span>
-          </p>
-          <img src="./images/posters/the-great-flamarion.jpg" alt="" class="film-card__poster">
-          <p class="film-card__description">The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Grea…</p>
-          <a class="film-card__comments">12 comments</a>
-          <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-          </form>
-        </article>
-      </div>
+      <div class="films-list__container"></div>
     </section>`
   );
 };
 
+const createTopRated = (film) => {
+  return (
+    `<article class="film-card">
+        <h3 class="film-card__title film-card__click" data-id="${film.id}">${film.film}</h3>
+        <p class="film-card__rating">${film.rating}</p>
+        <p class="film-card__info">
+          <span class="film-card__year">${film.filmYear.year}</span>
+          <span class="film-card__duration">${film.filmDuration}</span>
+          <span class="film-card__genre">${film.filmGenre.join(`, `)}</span>
+        </p>
+        <img src="${film.poster}" alt="" class="film-card__poster film-card__click" data-id="${film.id}">
+        <p class="film-card__description">${film.description}</p>
+        <a class="film-card__comments film-card__click" data-id="${film.id}">${film.comments.length} comments</a>
+        <form class="film-card__controls">
+          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" data-id="${film.id}">Add to watchlist</button>
+          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched" data-id="${film.id}">Mark as watched</button>
+          <button class="film-card__controls-item button film-card__controls-item--favorite" data-id="${film.id}">Mark as favorite</button>
+        </form>
+    </article>`
+  );
+};
 
+
+
+
+/***/ }),
+
+/***/ "./src/main.js":
+/*!*********************!*\
+  !*** ./src/main.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "randomFilms": () => (/* binding */ randomFilms),
+/* harmony export */   "renderHTMLElemens": () => (/* binding */ renderHTMLElemens)
+/* harmony export */ });
+/* harmony import */ var _components_profile_rating_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/profile-rating.js */ "./src/components/profile-rating.js");
+/* harmony import */ var _components_site_menu_and_stats_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/site-menu-and-stats.js */ "./src/components/site-menu-and-stats.js");
+/* harmony import */ var _components_sort_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/sort.js */ "./src/components/sort.js");
+/* harmony import */ var _components_film_card_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/film-card.js */ "./src/components/film-card.js");
+/* harmony import */ var _components_top_rated_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/top-rated.js */ "./src/components/top-rated.js");
+/* harmony import */ var _components_most_commented_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/most-commented.js */ "./src/components/most-commented.js");
+/* harmony import */ var _components_footer_statistic_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/footer-statistic.js */ "./src/components/footer-statistic.js");
+/* harmony import */ var _components_film_details_popup_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/film-details-popup.js */ "./src/components/film-details-popup.js");
+/* harmony import */ var _mock_random_films_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mock/random-films.js */ "./src/mock/random-films.js");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./util.js */ "./src/util.js");
+/* harmony import */ var _mock_filter_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./mock/filter.js */ "./src/mock/filter.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const FILM_CARDS_START = 0;
+const FILM_CARDS_AMOUNT = 5;
+const FILM_CARD_SHOW_BY_BUTTON = 5;
+
+const randomFilms = (0,_mock_random_films_js__WEBPACK_IMPORTED_MODULE_8__.getRandomFilmsArray)();
+// console.log(randomFilms);
+
+const renderHTMLElemens = (container, html, position = `beforeend`) => {
+  const place = document.querySelector(container);
+  place.insertAdjacentHTML(position, html);
+};
+
+
+renderHTMLElemens(`.header`, (0,_components_profile_rating_js__WEBPACK_IMPORTED_MODULE_0__.createProfileRating)());
+// renderHTMLElemens(`.main`, createSiteMenuAndStats(filter));
+(0,_util_js__WEBPACK_IMPORTED_MODULE_9__.render)(`.main`, new _components_site_menu_and_stats_js__WEBPACK_IMPORTED_MODULE_1__.SiteMenu(_mock_filter_js__WEBPACK_IMPORTED_MODULE_10__.filter).getElement());
+renderHTMLElemens(`.main`, (0,_components_sort_js__WEBPACK_IMPORTED_MODULE_2__.createSort)());
+renderHTMLElemens(`.main`, (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.createSectionFilms)());
+randomFilms.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT).forEach((item) => {
+  renderHTMLElemens(`.films-list__container`, (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.createFilmCard)(item));
+});
+renderHTMLElemens(`.films-list`, (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.createButtonShowMore)());
+renderHTMLElemens(`.films`, (0,_components_top_rated_js__WEBPACK_IMPORTED_MODULE_4__.createTopRatedContainer)());
+randomFilms
+  .slice()
+  .sort((a, b) => b.rating - a.rating)
+  .slice(0, 2)
+  .forEach((item) => renderHTMLElemens(`#top-rated .films-list__container`, (0,_components_top_rated_js__WEBPACK_IMPORTED_MODULE_4__.createTopRated)(item)));
+
+renderHTMLElemens(`.films`, (0,_components_most_commented_js__WEBPACK_IMPORTED_MODULE_5__.createMostCommentedContainer)());
+
+randomFilms
+  .slice()
+  .sort((a, b) => b.comments.length - a.comments.length)
+  .slice(0, 2)
+  .forEach((item) => renderHTMLElemens(`#most-commented .films-list__container`, (0,_components_most_commented_js__WEBPACK_IMPORTED_MODULE_5__.createMostCommented)(item)));
+
+renderHTMLElemens(`.footer__statistics`, (0,_components_footer_statistic_js__WEBPACK_IMPORTED_MODULE_6__.createFooterStatistic)());
+
+document.addEventListener(`click`, _components_film_details_popup_js__WEBPACK_IMPORTED_MODULE_7__.showPopup);
+
+(0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.buttonAddToWatchlistHandlerFn)();
+
+let filmAmount = FILM_CARDS_AMOUNT;
+
+const buttonShowMore = document.querySelector(`.films-list__show-more`);
+buttonShowMore.addEventListener(`click`, () => {
+  (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.removeButtonAddToWatchlistHandlerFn)();
+  let prevFilmCount = filmAmount;
+  filmAmount += FILM_CARD_SHOW_BY_BUTTON;
+  randomFilms.slice(prevFilmCount, filmAmount).forEach((item) => {
+    renderHTMLElemens(`.films-list__container`, (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.createFilmCard)(item));
+    if (filmAmount >= randomFilms.length) {
+      buttonShowMore.remove();
+    }
+  });
+  (0,_components_film_card_js__WEBPACK_IMPORTED_MODULE_3__.buttonAddToWatchlistHandlerFn)();
+});
+
+
+
+
+/***/ }),
+
+/***/ "./src/mock/comments.js":
+/*!******************************!*\
+  !*** ./src/mock/comments.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getRandomComment": () => (/* binding */ getRandomComment)
+/* harmony export */ });
+/* harmony import */ var _random_generator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./random-generator.js */ "./src/mock/random-generator.js");
+
+
+const commentsText = [
+  `Good film-1`,
+  `Good film-2`,
+  `Good film-3`,
+  `Good film-4`,
+  `Good film-5`
+];
+
+const commentsEmotion = [
+  `smile`, `sleeping`, `puke`, `angry`
+];
+
+const emotionImg = [
+  `./images/emoji/smile.png`,
+  `./images/emoji/sleeping.png`,
+  `./images/emoji/puke.png`,
+  `./images/emoji/angry.png`,
+];
+
+const commentsAuthor = [
+  `Ahilles`,
+  `Gector`,
+  `Ajax`,
+  `Agamemnon`,
+  `Odissey`,
+];
+
+const commentsDate = [
+  `2021/12/22 23:28`,
+  `2021/11/30 23:28`,
+  `2021/12/18 08:36`,
+  `2021/09/01 11:36`,
+  `2021/01/01 00:00`,
+];
+
+const MAX_COMMENTS = 5;
+
+const getRandomComment = () => {
+  const comments = [];
+  for (let i = 0; i < (0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, MAX_COMMENTS); i++) {
+    const comment = {
+      text: commentsText[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, commentsText.length)],
+      emotion: commentsEmotion[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, commentsEmotion.length)],
+      author: commentsAuthor[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, commentsAuthor.length)],
+      date: commentsDate[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, commentsDate.length)],
+      img: emotionImg[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_0__.getRandomIndexArray)(0, emotionImg.length)]
+    };
+    comments.push(comment);
+  }
+  return comments;
+};
+
+
+
+
+/***/ }),
+
+/***/ "./src/mock/filter.js":
+/*!****************************!*\
+  !*** ./src/mock/filter.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "filter": () => (/* binding */ filter)
+/* harmony export */ });
+const filter = {
+  watchlist: 8,
+  history: 5,
+  favorites: 6
+};
+
+
+/***/ }),
+
+/***/ "./src/mock/random-films.js":
+/*!**********************************!*\
+  !*** ./src/mock/random-films.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getRandomFilmsArray": () => (/* binding */ getRandomFilmsArray)
+/* harmony export */ });
+/* harmony import */ var _comments_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./comments.js */ "./src/mock/comments.js");
+/* harmony import */ var _random_generator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./random-generator.js */ "./src/mock/random-generator.js");
+
+
+
+const films = [
+  `Made for Each Other`,
+  `Popeye the Sailor meets Sindbad`,
+  `Sagevrush  trail`,
+  `Santa claus conquers the Martians`,
+  `The dance of life`,
+  `The great flamarion`,
+  `The man whith the golden arm`
+];
+
+const posters = [
+  `./images/posters/made-for-each-other.png`,
+  `./images/posters/popeye-meets-sinbad.png`,
+  `./images/posters/sagebrush-trail.jpg`,
+  `./images/posters/santa-claus-conquers-the-martians.jpg`,
+  `./images/posters/the-dance-of-life.jpg`,
+  `./images/posters/the-great-flamarion.jpg`,
+  `./images/posters/the-man-with-the-golden-arm.jpg`,
+];
+
+const descriptions = [
+  `Made for Each Other. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  `Popeye the Sailor meets Sindbad. Cras aliquet varius magna, non porta ligula feugiat eget.`,
+  `Sagevrush  trail. Aliquam id orci ut lectus varius viverra`,
+  `Santa claus conquers the Martians. Nullam nunc ex, convallis sedfinibus eget, sollicitudin eget ante`,
+  `The dance of life. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
+  `The great flamarion. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
+  `The man whith the golden arm. Sed sed nisi sed augue convallis suscipit in sed felis `
+];
+
+const ratings = [
+  6.6,
+  9.8,
+  7.0,
+  8.1,
+  4.2,
+  5.7,
+  6.1
+];
+
+const filmYears = [
+  {date: `01 April`, year: 2010},
+  {date: `05 March`, year: 2019},
+  {date: `11 January`, year: 1938},
+  {date: `20 Febriary`, year: 1967},
+  {date: `04 April`, year: 1991},
+  {date: `30 June`, year: 2016},
+  {date: `19 July`, year: 2000},
+];
+
+const filmDurations = [
+  `1h 36m`,
+  `2h 16m`,
+  `1h 59m`,
+  `1h 45m`,
+  `3h 19m`,
+  `2h 15m`,
+  `1h 49m`
+];
+
+const filmGenres = [
+  `Musical`,
+  `Western`,
+  `Drama`,
+  `Comedy`,
+  `Cartoon`,
+  `Mystery`,
+];
+
+const directors = [
+  `QUENTIN TARANTINO`,
+  `GUILLERMO DEL TORO`,
+  `PETER JACKSON`,
+  `TAIKA WAITITI`,
+  `ALFONSO CUARÒN`,
+  `STEPHEN SPIELBERG`,
+  `JAMES CAMERON`
+];
+
+const actors = [
+  `Johnny Depp, Al Pacino`,
+  `Robert De Niro, Kevin Spacey`,
+  `Denzel Washington, Russell Crowe`,
+  `Brad Pitt, Angelina Jolie`,
+  `Leonardo DiCaprio, Tom Cruise`,
+  `John Travolta, Arnold Schwarzenegger`,
+  `Sylvester Stallone, Kate Winslet`,
+];
+
+const countries = [
+  `USA`,
+  `Russia`,
+  `England`,
+  `Spain`,
+  `France`,
+  `Italy`,
+  `China`,
+];
+
+const ageRatings = [
+  `18+`,
+  `16+`,
+  `12+`,
+  `18+`,
+  `6+`,
+  `10+`,
+  `0+`
+];
+
+const getRandomArrayElement = (arr) => arr[(0,_random_generator_js__WEBPACK_IMPORTED_MODULE_1__.getRandomIndexArray)(0, arr.length)];
+
+const getRandomArrayLength = (arr) => arr.slice((0,_random_generator_js__WEBPACK_IMPORTED_MODULE_1__.getRandomIndexArray)(0, arr.length));
+
+const renderRandomFilm = () => {
+  const randomIndex = (0,_random_generator_js__WEBPACK_IMPORTED_MODULE_1__.getRandomIndexArray)(0, films.length);
+  return {
+    film: films[randomIndex],
+    poster: posters[randomIndex],
+    description: descriptions[randomIndex],
+    rating: getRandomArrayElement(ratings),
+    filmYear: getRandomArrayElement(filmYears),
+    filmDuration: getRandomArrayElement(filmDurations),
+    filmGenre: getRandomArrayLength(filmGenres),
+    comments: (0,_comments_js__WEBPACK_IMPORTED_MODULE_0__.getRandomComment)(),
+    director: directors[randomIndex],
+    actors: actors[randomIndex],
+    country: countries[randomIndex],
+    ageRating: ageRatings[randomIndex],
+  };
+};
+
+const RANDOM_FILM = 20;
+
+const getRandomFilmsArray = () => {
+  const randomFilms = [];
+  for (let i = 0; i < RANDOM_FILM; i++) {
+    randomFilms.push(renderRandomFilm());
+    randomFilms[i].id = i;
+  }
+  return randomFilms;
+};
+
+
+
+
+/***/ }),
+
+/***/ "./src/mock/random-generator.js":
+/*!**************************************!*\
+  !*** ./src/mock/random-generator.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getRandomIndexArray": () => (/* binding */ getRandomIndexArray),
+/* harmony export */   "getRandomInt": () => (/* binding */ getRandomInt)
+/* harmony export */ });
+const getRandomIndexArray = (min, max) => {
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
+
+const getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+
+/***/ }),
+
+/***/ "./src/util.js":
+/*!*********************!*\
+  !*** ./src/util.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RenderPosition": () => (/* binding */ RenderPosition),
+/* harmony export */   "createElement": () => (/* binding */ createElement),
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const render = (container, element, position = `beforeend`) => {
+  const place = document.querySelector(container);
+  switch (position) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      place.append(element);
+      break;
+  }
+};
 
 
 /***/ })
@@ -513,51 +980,12 @@ const createTopRated = () => {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-/*!*********************!*\
-  !*** ./src/main.js ***!
-  \*********************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_profile_rating_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/profile-rating.js */ "./src/components/profile-rating.js");
-/* harmony import */ var _components_site_menu_and_sort_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/site-menu-and-sort.js */ "./src/components/site-menu-and-sort.js");
-/* harmony import */ var _components_film_crad_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/film-crad.js */ "./src/components/film-crad.js");
-/* harmony import */ var _components_top_rated_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/top-rated.js */ "./src/components/top-rated.js");
-/* harmony import */ var _components_most_commented_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/most-commented.js */ "./src/components/most-commented.js");
-/* harmony import */ var _components_footer_statistic_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/footer-statistic.js */ "./src/components/footer-statistic.js");
-/* harmony import */ var _components_film_details_popup_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/film-details-popup.js */ "./src/components/film-details-popup.js");
-
-
-
-
-
-
-
-
-
-
-
-const renderHTMLElemens = (className, html, position = `beforeend`) => {
-  const place = document.querySelector(className);
-  place.insertAdjacentHTML(position, html);
-};
-
-renderHTMLElemens(`.header`, (0,_components_profile_rating_js__WEBPACK_IMPORTED_MODULE_0__.createProfileRating)());
-renderHTMLElemens(`.main`, (0,_components_site_menu_and_sort_js__WEBPACK_IMPORTED_MODULE_1__.createSiteMenuAndStats)());
-renderHTMLElemens(`.main`, (0,_components_site_menu_and_sort_js__WEBPACK_IMPORTED_MODULE_1__.createSort)());
-renderHTMLElemens(`.main`, (0,_components_film_crad_js__WEBPACK_IMPORTED_MODULE_2__.createSectionFilms)());
-for (let i = 0; i < 5; i++) {
-  renderHTMLElemens(`.films-list__container`, (0,_components_film_crad_js__WEBPACK_IMPORTED_MODULE_2__.createFilmCard)());
-}
-renderHTMLElemens(`.films-list`, (0,_components_film_crad_js__WEBPACK_IMPORTED_MODULE_2__.createButtonShowMore)());
-renderHTMLElemens(`.films`, (0,_components_top_rated_js__WEBPACK_IMPORTED_MODULE_3__.createTopRated)());
-renderHTMLElemens(`.films`, (0,_components_most_commented_js__WEBPACK_IMPORTED_MODULE_4__.createMostCommented)());
-renderHTMLElemens(`.footer__statistics`, (0,_components_footer_statistic_js__WEBPACK_IMPORTED_MODULE_5__.createFooterStatistic)());
-renderHTMLElemens(`.footer`, (0,_components_film_details_popup_js__WEBPACK_IMPORTED_MODULE_6__.createFilmDetailsPopup)(), `afterend`);
-
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/main.js");
+/******/ 	
 /******/ })()
 ;
 //# sourceMappingURL=bundle.js.map

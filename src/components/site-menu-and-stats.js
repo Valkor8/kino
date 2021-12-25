@@ -1,8 +1,4 @@
-const filter = {
-  watchlist: 8,
-  history: 5,
-  favorites: 6
-};
+import {createElement} from "../util.js";
 
 const createSiteMenuAndStats = (obj) => {
   return (
@@ -18,14 +14,25 @@ const createSiteMenuAndStats = (obj) => {
   );
 };
 
-const createSort = () => {
-  return (
-    `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button">Sort by rating</a></li>
-    </ul>`
-  );
-};
+export class SiteMenu {
+  constructor(obj) {
+    this._obj = obj;
 
-export {createSiteMenuAndStats, createSort, filter};
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuAndStats(this._obj);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
