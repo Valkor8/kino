@@ -14,7 +14,7 @@ export const render = (container, element, position = `beforeend`) => {
   const place = document.querySelector(container);
   switch (position) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
+      place.prepend(element);
       break;
     case RenderPosition.BEFOREEND:
       place.append(element);

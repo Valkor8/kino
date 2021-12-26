@@ -1,8 +1,27 @@
-import {randomFilms, renderHTMLElemens} from "../main.js";
+import {createElement} from "../util.js";
+
+const renderComments = (comments) => {
+  const arrComments = [];
+  comments.forEach((comment) => {
+    arrComments.push(`<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="${comment.img}" width="55" height="55" alt="emoji-${comment.commentsEmotion}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${comment.text}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${comment.author}</span>
+          <span class="film-details__comment-day">${comment.date}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`);
+  });
+  return arrComments;
+};
 
 const createFilmDetailsPopup = (film) => {
   const comments = film.comments;
-  popupCloseHandler();
   return (
     `<section class="film-details" id="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -122,49 +141,27 @@ const createFilmDetailsPopup = (film) => {
   );
 };
 
-const renderComments = (comments) => {
-  const arrComments = [];
-  comments.forEach((comment) => {
-    arrComments.push(`<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="${comment.img}" width="55" height="55" alt="emoji-${comment.commentsEmotion}">
-      </span>
-      <div>
-        <p class="film-details__comment-text">${comment.text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${comment.date}</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`);
-  });
-  return arrComments;
-};
+export default class FilmPopup {
+  constructor(film) {
+    this.film = film;
 
-const showPopup = (evt) => {
-  if (evt.target.classList.contains(`film-card__click`)) {
-    randomFilms.forEach((item) => {
-      if (+evt.target.dataset.id === item.id) {
-        if (document.querySelector(`#film-details`)) {
-          const filmDetails = document.querySelector(`#film-details`);
-          filmDetails.remove();
-        }
-        renderHTMLElemens(`.footer`, createFilmDetailsPopup(item), `afterend`);
-      }
-    });
+    this._element = null;
   }
-};
 
-const popupRemove = (evt) => {
-  const filmDetails = document.querySelector(`#film-details`);
-  if (evt.target.classList.contains(`film-details__close-btn`)) {
-    filmDetails.remove();
+  getTemplate() {
+    return createFilmDetailsPopup(this.film);
   }
-};
 
-const popupCloseHandler = () => document.addEventListener(`click`, popupRemove);
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
 
-export {createFilmDetailsPopup, showPopup};
+  removeElement() {
+    this._element = null;
+  }
+}
 
-// ${film.comments.forEach((item) => renderComments(item))}
+

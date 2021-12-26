@@ -1,11 +1,31 @@
-import {getRandomInt} from "../mock/random-generator.js";
+import {createElement} from "../util.js";
 
-const totalFilms = getRandomInt(1000, 100000);
-
-const createFooterStatistic = () => {
+const createFooterStatistic = (stats) => {
   return (
-    `<p>${totalFilms} movies inside</p>`
+    `<p>${stats} movies inside</p>`
   );
 };
 
-export {createFooterStatistic};
+export default class Stats {
+  constructor(stats) {
+    this.stats = stats;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFooterStatistic(this.stats);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

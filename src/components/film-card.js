@@ -1,17 +1,14 @@
+import {createElement} from "../util.js";
+
 const createSectionFilms = () => {
   return (
     `<section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
         <div class="films-list__container"></div>
+        <button class="films-list__show-more">Show more</button>
       </section>
     </section>`
-  );
-};
-
-const createButtonShowMore = () => {
-  return (
-    `<button class="films-list__show-more">Show more</button>`
   );
 };
 
@@ -37,6 +34,33 @@ const createFilmCard = (film) => {
   );
 };
 
+export default class FilmCards {
+  constructor(film) {
+    this.film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCard(this.film);
+  }
+
+  getSectionFilms() {
+    return createElement(createSectionFilms());
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
 // const buttonMarkAsWathed = document.querySelector(`.film-card__controls-item--mark-as-watched`);
 // const buttonAddToFavorites = document.querySelector(`.film-card__controls-item--favorite`);
 
@@ -59,4 +83,4 @@ const removeButtonAddToWatchlistHandlerFn = () => {
   });
 };
 
-export {createButtonShowMore, createSectionFilms, createFilmCard, buttonAddToWatchlistHandlerFn, removeButtonAddToWatchlistHandlerFn};
+export {buttonAddToWatchlistHandlerFn, removeButtonAddToWatchlistHandlerFn};
