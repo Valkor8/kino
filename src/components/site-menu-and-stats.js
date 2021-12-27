@@ -14,7 +14,7 @@ const createSiteMenuAndStats = (obj) => {
   );
 };
 
-export class SiteMenu {
+export default class SiteMenu {
   constructor(obj) {
     this._obj = obj;
 

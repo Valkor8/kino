@@ -1,3 +1,5 @@
+import {createElement} from "../util.js";
+
 const createTopRatedContainer = () => {
   return (
     `<section class="films-list--extra" id="top-rated">
@@ -29,4 +31,29 @@ const createTopRated = (film) => {
   );
 };
 
-export {createTopRatedContainer, createTopRated};
+export default class TopRated {
+  constructor(film) {
+    this.film = film;
+
+    this._element = null;
+  }
+
+  getContainer() {
+    return createElement(createTopRatedContainer());
+  }
+
+  getTemplate() {
+    return createTopRated(this.film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

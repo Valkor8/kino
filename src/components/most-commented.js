@@ -1,3 +1,5 @@
+import {createElement} from "../util.js";
+
 const createMostCommentedContainer = () => {
   return (
     `<section class="films-list--extra" id="most-commented">
@@ -29,4 +31,29 @@ const createMostCommented = (film) => {
   );
 };
 
-export {createMostCommentedContainer, createMostCommented};
+export default class MostCommented {
+  constructor(film) {
+    this.film = film;
+
+    this._element = null;
+  }
+
+  getContainer() {
+    return createElement(createMostCommentedContainer());
+  }
+
+  getTemplate() {
+    return createMostCommented(this.film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
