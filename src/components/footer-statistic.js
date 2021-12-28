@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createFooterStatistic = (stats) => {
   return (
@@ -6,26 +6,15 @@ const createFooterStatistic = (stats) => {
   );
 };
 
-export default class Stats {
+export default class Stats extends AbstractComponent {
   constructor(stats) {
-    this.stats = stats;
+    super();
 
-    this._element = null;
+    this.stats = stats;
   }
 
   getTemplate() {
     return createFooterStatistic(this.stats);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

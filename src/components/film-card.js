@@ -1,4 +1,5 @@
-import {createElement} from "../util.js";
+import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createSectionFilms = () => {
   return (
@@ -6,7 +7,6 @@ const createSectionFilms = () => {
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
         <div class="films-list__container"></div>
-        <button class="films-list__show-more">Show more</button>
       </section>
     </section>`
   );
@@ -34,30 +34,23 @@ const createFilmCard = (film) => {
   );
 };
 
-export default class FilmCards {
+export default class FilmCards extends AbstractComponent {
   constructor(film) {
+    super();
     this.film = film;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCard(this.film);
   }
 
-  getSectionFilms() {
+  getContainer() {
     return createElement(createSectionFilms());
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHadnler(cb) {
+    this.filmCardClick = this.getElement().querySelectorAll(`.film-card__click`);
+    this.filmCardClick.forEach((item) => item.addEventListener(`click`, cb));
   }
 }
 

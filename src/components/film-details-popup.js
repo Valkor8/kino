@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import AbstractComponent from "./abstract-component.js";
 
 const renderComments = (comments) => {
   const arrComments = [];
@@ -141,26 +141,18 @@ const createFilmDetailsPopup = (film) => {
   );
 };
 
-export default class FilmPopup {
+export default class FilmPopup extends AbstractComponent {
   constructor(film) {
+    super();
     this.film = film;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetailsPopup(this.film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(cb) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
 }
 

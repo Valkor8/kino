@@ -1,4 +1,5 @@
-import {createElement} from "../util.js";
+import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createTopRatedContainer = () => {
   return (
@@ -31,11 +32,10 @@ const createTopRated = (film) => {
   );
 };
 
-export default class TopRated {
+export default class TopRated extends AbstractComponent {
   constructor(film) {
+    super();
     this.film = film;
-
-    this._element = null;
   }
 
   getContainer() {
@@ -46,14 +46,8 @@ export default class TopRated {
     return createTopRated(this.film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHadnler(cb) {
+    this.filmCardClick = this.getElement().querySelectorAll(`.film-card__click`);
+    this.filmCardClick.forEach((item) => item.addEventListener(`click`, cb));
   }
 }

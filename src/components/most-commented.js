@@ -1,4 +1,5 @@
-import {createElement} from "../util.js";
+import AbstractComponent from "./abstract-component.js";
+import {createElement} from "../utils/render.js";
 
 const createMostCommentedContainer = () => {
   return (
@@ -31,11 +32,11 @@ const createMostCommented = (film) => {
   );
 };
 
-export default class MostCommented {
+export default class MostCommented extends AbstractComponent {
   constructor(film) {
-    this.film = film;
+    super();
 
-    this._element = null;
+    this.film = film;
   }
 
   getContainer() {
@@ -46,14 +47,8 @@ export default class MostCommented {
     return createMostCommented(this.film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHadnler(cb) {
+    this.filmCardClick = this.getElement().querySelectorAll(`.film-card__click`);
+    this.filmCardClick.forEach((item) => item.addEventListener(`click`, cb));
   }
 }
