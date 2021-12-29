@@ -9,6 +9,10 @@ const createButtonShowMore = () => {
 export default class ButtonShowMore extends AbstractComponent {
 
   getTemplate() {
-    return createButtonShowMore(this.rating);
+    return createButtonShowMore();
+  }
+
+  setClickHandler(cb) {
+    this.getElement().addEventListener(`click`, cb);
   }
 }

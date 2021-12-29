@@ -1,3 +1,5 @@
+import {SortType as SortTypeObj} from "../components/sort.js";
+
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
@@ -34,3 +36,19 @@ export const renderContainer = (container, component, position = `beforeend`) =>
   }
 };
 
+export const renderSortFilms = (films, sortType) => {
+  let sortedFilms = [];
+  const filmCardsSort = films.slice();
+  switch (sortType) {
+    case SortTypeObj.DATE:
+      sortedFilms = filmCardsSort.sort((a, b) => b.filmYear.year - a.filmYear.year);
+      break;
+    case SortTypeObj.RATING:
+      sortedFilms = filmCardsSort.sort((a, b) => b.rating - a.rating);
+      break;
+    case SortTypeObj.DEFAULT:
+      sortedFilms = filmCardsSort;
+  }
+
+  return sortedFilms;
+};
