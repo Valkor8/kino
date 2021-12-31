@@ -52,28 +52,19 @@ export default class FilmCards extends AbstractComponent {
     this.filmCardClick = this.getElement().querySelectorAll(`.film-card__click`);
     this.filmCardClick.forEach((item) => item.addEventListener(`click`, cb));
   }
+
+  buttonAddToWatchlistHandler(cb) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, cb);
+  }
+
+  buttonMarkAsWatchedHandler(cb) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, cb);
+  }
+
+  buttonAddToFavoriteHandler(cb) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+    .addEventListener(`click`, cb);
+  }
 }
-
-// const buttonMarkAsWathed = document.querySelector(`.film-card__controls-item--mark-as-watched`);
-// const buttonAddToFavorites = document.querySelector(`.film-card__controls-item--favorite`);
-
-const buttonAddToWatchlistHandler = (evt) => {
-  evt.preventDefault();
-  // alert(evt.target.dataset.id);
-};
-
-const buttonAddToWatchlistHandlerFn = () => {
-  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
-  buttonAddToWatchlist.forEach((item) => {
-    item.addEventListener(`click`, buttonAddToWatchlistHandler);
-  });
-};
-
-const removeButtonAddToWatchlistHandlerFn = () => {
-  const buttonAddToWatchlist = Array.from(document.querySelectorAll(`.film-card__controls-item--add-to-watchlist`));
-  buttonAddToWatchlist.forEach((item) => {
-    item.removeEventListener(`click`, buttonAddToWatchlistHandler);
-  });
-};
-
-export {buttonAddToWatchlistHandlerFn, removeButtonAddToWatchlistHandlerFn};

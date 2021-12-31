@@ -154,6 +154,18 @@ export default class FilmPopup extends AbstractComponent {
   setClickHandler(cb) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
+
+  buttonAddToWatchlistHandler(cb) {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, cb);
+  }
+
+  buttonMarkAsWatchedHandler(cb) {
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, cb);
+  }
+
+  buttonAddToFavoriteHandler(cb) {
+    this.getElement().querySelector(`favorite`).addEventListener(`change`, cb);
+  }
 }
 
 

@@ -1,4 +1,4 @@
-export const setEventHandlers = (container, filmInstance, popupInstance) => {
+export const setEventPopupHandlers = (container, filmInstance, popupInstance) => {
   const containerNode = document.querySelector(container);
 
   const onShowPopup = () => {
