@@ -13,25 +13,27 @@ export const createElement = (template) => {
 };
 
 export const render = (container, component, position = `beforeend`) => {
-  const place = document.querySelector(container);
   switch (position) {
     case RenderPosition.AFTERBEGIN:
-      place.prepend(component.getElement());
+      container.prepend(component.getElement());
       break;
     case RenderPosition.BEFOREEND:
-      place.append(component.getElement());
+      container.append(component.getElement());
       break;
   }
 };
 
+export const replace = (container, component, oldComponent, position = `beforeend`) => {
+  container.parentElement.replaceChild(component, oldComponent);
+};
+
 export const renderContainer = (container, component, position = `beforeend`) => {
-  const place = document.querySelector(container);
   switch (position) {
     case RenderPosition.AFTERBEGIN:
-      place.prepend(component.getContainer());
+      container.prepend(component.getContainer());
       break;
     case RenderPosition.BEFOREEND:
-      place.append(component.getContainer());
+      container.append(component.getContainer());
       break;
   }
 };
@@ -51,4 +53,9 @@ export const renderSortFilms = (films, sortType) => {
   }
 
   return sortedFilms;
+};
+
+export const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
 };

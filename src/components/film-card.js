@@ -1,5 +1,5 @@
 import {createElement} from "../utils/render.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createSectionFilms = () => {
   return (
@@ -34,10 +34,12 @@ const createFilmCard = (film) => {
   );
 };
 
-export default class FilmCards extends AbstractComponent {
+export default class FilmCards extends AbstractSmartComponent {
   constructor(film) {
     super();
     this.film = film;
+
+    this._setClickHadler = null;
   }
 
   getTemplate() {
@@ -48,9 +50,21 @@ export default class FilmCards extends AbstractComponent {
     return createElement(createSectionFilms());
   }
 
+  recoveryListeners() {
+    this.setClickHadnler(this._setClickHadler = null);
+    this.buttonAddToWatchlistHandler();
+    this.buttonMarkAsWatchedHandler();
+    this.buttonAddToFavoriteHandler();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   setClickHadnler(cb) {
+    this._setClickHadler = cb;
     this.filmCardClick = this.getElement().querySelectorAll(`.film-card__click`);
-    this.filmCardClick.forEach((item) => item.addEventListener(`click`, cb));
+    this.filmCardClick.forEach((item) => item.addEventListener(`click`, this._setClickHadler));
   }
 
   buttonAddToWatchlistHandler(cb) {

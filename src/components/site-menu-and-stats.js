@@ -1,5 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
+
 const createSiteMenuAndStats = (obj) => {
   return (
     `<nav class="main-navigation">
@@ -15,12 +16,32 @@ const createSiteMenuAndStats = (obj) => {
 };
 
 export default class SiteMenu extends AbstractComponent {
-  constructor(obj) {
+  constructor(films) {
     super();
-    this._obj = obj;
+    this._films = films;
+  }
+
+  getSumFlags(films) {
+    const obj = {
+      watchlist: 0,
+      history: 0,
+      favorites: 0
+    };
+    films.forEach((film) => {
+      if (film.filter.watchlist === true) {
+        obj.watchlist += 1;
+      }
+      if (film.filter.history === true) {
+        obj.history += 1;
+      }
+      if (film.filter.favorites === true) {
+        obj.favorites += 1;
+      }
+    });
+    return obj;
   }
 
   getTemplate() {
-    return createSiteMenuAndStats(this._obj);
+    return createSiteMenuAndStats(this.getSumFlags(this._films));
   }
 }

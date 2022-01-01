@@ -1,6 +1,7 @@
 import {getRandomComment} from "./comments.js";
 import {getRandomIndexArray} from "./random-generator.js";
 
+
 const films = [
   `Made for Each Other`,
   `Popeye the Sailor meets Sindbad`,
@@ -110,6 +111,12 @@ const ageRatings = [
   `0+`
 ];
 
+const filter = {
+  watchlist: false,
+  history: false,
+  favorites: false
+};
+
 const getRandomArrayElement = (arr) => arr[getRandomIndexArray(0, arr.length)];
 
 const getRandomArrayLength = (arr) => arr.slice(getRandomIndexArray(0, arr.length));
@@ -129,6 +136,7 @@ const renderRandomFilm = () => {
     actors: actors[randomIndex],
     country: countries[randomIndex],
     ageRating: ageRatings[randomIndex],
+    filter
   };
 };
 

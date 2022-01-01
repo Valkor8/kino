@@ -1,6 +1,6 @@
 import FilmCards from "../components/film-card.js";
 import FilmPopup from "../components/film-details-popup.js";
-import {render} from "../utils/render.js";
+import {render, replace} from "../utils/render.js";
 import {setEventPopupHandlers} from "../utils/handlers.js";
 
 
@@ -14,22 +14,63 @@ export default class MovieController {
     this._onDataChange = onDataChange;
   }
 
-  render(container, film) {
+  render(film) {
     this.filmCards = new FilmCards(film);
     this.filmPopup = new FilmPopup(film);
 
-    setEventPopupHandlers(container, this.filmCards, this.filmPopup);
-    render(container, this.filmCards);
+    setEventPopupHandlers(this._container, this.filmCards, this.filmPopup);
+    render(this._container, this.filmCards);
+
+    this.filmCards.recoveryListeners();
 
     this.filmCards.buttonAddToWatchlistHandler((evt) => {
       evt.preventDefault();
-      alert(evt.target.textContent)
-      this._onDataChange();
+
+      if (!evt.target.classList.contains(`.film-card__controls-item--active`)) {
+        evt.target.classList.add(`.film-card__controls-item--active`);
+      } else {
+        evt.target.classList.remove(`.film-card__controls-item--active`);
+      }
+
+      this._onDataChange(this, film, Object.assign({}, film, {
+        filter: {
+          watchlist: film.filter.watchlist ? false : true,
+          history: film.filter.history,
+          favorites: film.filter.favorites,
+        }
+      }));
     });
 
+    this.filmCards.buttonMarkAsWatchedHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        filter: {
+          watchlist: film.filter.watchlist,
+          history: film.filter.history ? false : true,
+          favorites: film.filter.favorites,
+        }
+      }));
+    });
+
+    this.filmCards.buttonAddToFavoriteHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        filter: {
+          watchlist: film.filter.watchlist,
+          history: film.filter.history,
+          favorites: film.filter.favorites ? false : true,
+        }
+      }));
+    });
   }
 
+  replace(film) {
+    this.filmCards = new FilmCards(film);
+    this.filmPopup = new FilmPopup(film);
 
+    setEventPopupHandlers(this._container, this.filmCards, this.filmPopup);
+    replace(this._container, this.filmCards);
+  }
 }
 
 
