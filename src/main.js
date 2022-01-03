@@ -1,6 +1,5 @@
 import PageController from "./controllers/page-controllers.js";
 import {getRandomFilmsArray} from "./mock/random-films.js";
-// import "./controllers/page-controllers.js";
 
 const main = document.querySelector(`.main`);
 

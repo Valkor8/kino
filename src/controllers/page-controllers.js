@@ -39,6 +39,8 @@ export default class PageController {
     this._films = [];
     this._filmCardsSort = [];
     this._showedFilmContollers = [];
+    this._newTopRatedFilms = [];
+    this._newMostCommentedFilms = [];
     this._filmAmount = FILM_CARDS_AMOUNT;
 
     this._siteMenu = ``;
@@ -64,7 +66,7 @@ export default class PageController {
     renderContainer(this._container, this.filmCards);
 
     const filmsElement = this._container.querySelector(`.films`);
-    const filmListContainer = this._container.querySelector(`.films-list__container`);
+    const filmListMainContainer = this._container.querySelector(`.films-list__container-main`);
     const filmlist = this._container.querySelector(`.films-list`);
 
     if (this._films.length === 0 || !this._films) {
@@ -72,47 +74,31 @@ export default class PageController {
       return;
     }
 
-    const newFilms = renderFilms(filmListContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange);
+    const newFilms = renderFilms(filmListMainContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange);
     this._showedFilmContollers = this._showedFilmContollers.concat(newFilms);
-    console.log(newFilms)
 
     render(filmlist, this._buttonShowMore);
 
     renderContainer(filmsElement, this._topRated);
     const topRaitedContainer = this._container.querySelector(`#top-rated .films-list__container`);
 
-    renderFilms(topRaitedContainer, this._films
+    this._newTopRatedFilms = renderFilms(topRaitedContainer, this._films
       .slice()
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 2), this._onDataChange);
+    this._showedFilmContollers = this._showedFilmContollers.concat(this._newTopRatedFilms);
 
     renderContainer(filmsElement, this._mostCommented);
+
     const mostCommentedContainer = this._container.querySelector(`#most-commented .films-list__container`);
 
-    renderFilms(mostCommentedContainer, this._films
+    this._newMostCommentedFilms = renderFilms(mostCommentedContainer, this._films
       .slice()
       .sort((a, b) => b.comments.length - a.comments.length)
-      .slice(0, 2));
+      .slice(0, 2), this._onDataChange);
+    this._showedFilmContollers = this._showedFilmContollers.concat(this._newMostCommentedFilms);
 
     render(footerStatistics, new Stats(TOTAL_FILMS));
-  }
-
-  _onDataChange(filmController, oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
-
-    const oldFilm = this._films[index];
-
-    if (index === -1) {
-      return;
-    }
-
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
-    this._siteMenu.getElement().remove();
-    this._siteMenu = new SiteMenu(this._films);
-    render(this._container, this._siteMenu, `afterbegin`);
-
-    filmController.render(this._films[index]);
   }
 
   _setSortTypeChangeHadnler() {
@@ -123,7 +109,7 @@ export default class PageController {
       this._filmCardsSort = renderSortFilms(this._films, sortType);
 
       const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange);
-      this._showedFilmContollers = newFilms;
+      this._showedFilmContollers = newFilms.concat(this._newTopRatedFilms, this._newMostCommentedFilms);
       if (!this._container.querySelector(`.films-list__show-more`)) {
         render(filmList, this._buttonShowMore);
         this._buttonShowMore.setClickHandler(this._renderOnButtonClick());
@@ -149,5 +135,23 @@ export default class PageController {
     };
 
     this._buttonShowMore.setClickHandler(renderOnButtonClick);
+  }
+
+  _onDataChange(oldData, newData) {
+    const index = this._films.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    const filmController = this._showedFilmContollers.filter((item) => item.filmCards.film === oldData);
+
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+
+    remove(this._siteMenu);
+    this._siteMenu = new SiteMenu(this._films);
+    render(this._container, this._siteMenu, `afterbegin`);
+
+    filmController.forEach((item) => item.render(this._films[index]));
   }
 }

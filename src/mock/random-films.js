@@ -136,7 +136,7 @@ const renderRandomFilm = () => {
     actors: actors[randomIndex],
     country: countries[randomIndex],
     ageRating: ageRatings[randomIndex],
-    filter
+    filter,
   };
 };
 

@@ -23,8 +23,13 @@ export const render = (container, component, position = `beforeend`) => {
   }
 };
 
-export const replace = (container, component, oldComponent, position = `beforeend`) => {
-  container.parentElement.replaceChild(component, oldComponent);
+export const replace = (newComponent, oldComponent) => {
+  const oldFilm = oldComponent.getElement();
+  const parent = oldFilm.parentElement;
+
+  const newFilm = newComponent.getElement();
+
+  parent.replaceChild(newFilm, oldFilm);
 };
 
 export const renderContainer = (container, component, position = `beforeend`) => {

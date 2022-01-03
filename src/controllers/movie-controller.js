@@ -1,7 +1,7 @@
 import FilmCards from "../components/film-card.js";
 import FilmPopup from "../components/film-details-popup.js";
-import {render, replace} from "../utils/render.js";
-import {setEventPopupHandlers} from "../utils/handlers.js";
+import {remove, render, replace} from "../utils/render.js";
+import {setFilmCardsHandlers, setFilmPopupHandlers} from "../utils/handlers.js";
 
 
 export default class MovieController {
@@ -15,85 +15,55 @@ export default class MovieController {
   }
 
   render(film) {
+    const oldFilm = this.filmCards;
+    const oldPopup = this.filmPopup;
+
     this.filmCards = new FilmCards(film);
     this.filmPopup = new FilmPopup(film);
 
-    setEventPopupHandlers(this._container, this.filmCards, this.filmPopup);
-    render(this._container, this.filmCards);
+    if (oldFilm) {
+      replace(this.filmCards, oldFilm);
+      replace(this.filmPopup, oldPopup);
+      setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
+    } else {
+      render(this._container, this.filmCards);
+    }
 
-    this.filmCards.recoveryListeners();
-
-    this.filmCards.buttonAddToWatchlistHandler((evt) => {
-      evt.preventDefault();
-
-      if (!evt.target.classList.contains(`.film-card__controls-item--active`)) {
-        evt.target.classList.add(`.film-card__controls-item--active`);
-      } else {
-        evt.target.classList.remove(`.film-card__controls-item--active`);
-      }
-
-      this._onDataChange(this, film, Object.assign({}, film, {
-        filter: {
-          watchlist: film.filter.watchlist ? false : true,
-          history: film.filter.history,
-          favorites: film.filter.favorites,
+    const setEventPopupOpenAndCloseHandlers = (container, filmInstance, popupInstance) => {
+      const filmDetails = document.querySelector(`#film-details`);
+      const onShowPopup = () => {
+        if (filmDetails) {
+          filmDetails.remove();
         }
-      }));
-    });
+        container.appendChild(popupInstance.getElement());
+        popupInstance.setClickHandler(onRemovePopupClick);
+        document.addEventListener(`keydown`, onRemovePopupEsc);
+        popupInstance.emojiListHandler();
+        setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
+      };
 
-    this.filmCards.buttonMarkAsWatchedHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        filter: {
-          watchlist: film.filter.watchlist,
-          history: film.filter.history ? false : true,
-          favorites: film.filter.favorites,
+      const onRemovePopupEsc = (evt) => {
+        if (evt.key === `Escape` || evt.key === `Esc`) {
+          remove(popupInstance);
+          document.removeEventListener(`keydown`, onRemovePopupEsc);
         }
-      }));
-    });
+      };
 
-    this.filmCards.buttonAddToFavoriteHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        filter: {
-          watchlist: film.filter.watchlist,
-          history: film.filter.history,
-          favorites: film.filter.favorites ? false : true,
-        }
-      }));
-    });
-  }
+      const onRemovePopupClick = () => {
+        remove(popupInstance);
+        document.removeEventListener(`keydown`, onRemovePopupEsc);
+      };
 
-  replace(film) {
-    this.filmCards = new FilmCards(film);
-    this.filmPopup = new FilmPopup(film);
+      popupInstance.setClickHandler(onRemovePopupClick);
+      document.addEventListener(`keydown`, onRemovePopupEsc);
 
-    setEventPopupHandlers(this._container, this.filmCards, this.filmPopup);
-    replace(this._container, this.filmCards);
+      filmInstance.setClickHadnler(onShowPopup);
+    };
+
+    setEventPopupOpenAndCloseHandlers(this._container, this.filmCards, this.filmPopup);
+
+    setFilmCardsHandlers(film, this.filmCards, this._onDataChange);
+
+
   }
 }
-
-
-// renderTopRated(film) {
-//   const renderTopRated = (place, oneFilm) => {
-//     const topRated = new TopRated(oneFilm);
-//     const filmPopup = new FilmPopup(oneFilm);
-
-//     setEventHandlers(place, topRated, filmPopup);
-//     render(place, topRated);
-//   };
-
-//   renderTopRated(`#top-rated .films-list__container`, film);
-// }
-
-// renderMostCommented(film) {
-//   const renderMostCommented = (place, oneFilm) => {
-//     const mostCommented = new MostCommented(oneFilm);
-//     const filmPopup = new FilmPopup(oneFilm);
-
-//     setEventHandlers(place, mostCommented, filmPopup);
-//     render(place, mostCommented);
-//   };
-
-//   renderMostCommented(`#most-commented .films-list__container`, film);
-// }

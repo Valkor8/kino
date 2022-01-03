@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 export default class AbstractSmartComponent extends AbstractComponent {
+
   recoveryListeners() {
     throw new Error(`Abstarct method not implemented: recoveryListeners`);
   }
