@@ -5,13 +5,14 @@ import {setFilmCardsHandlers, setFilmPopupHandlers} from "../utils/handlers.js";
 
 
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
 
     this.filmCards = null;
     this.filmPopup = null;
 
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
   }
 
   render(film) {
@@ -21,49 +22,44 @@ export default class MovieController {
     this.filmCards = new FilmCards(film);
     this.filmPopup = new FilmPopup(film);
 
+    const onShowPopup = () => {
+      this._onViewChange();
+      this._container.appendChild(this.filmPopup.getElement());
+      this.filmPopup.setClickHandler(onRemovePopupClick);
+      document.addEventListener(`keydown`, onRemovePopupEsc);
+      this.filmPopup.emojiListHandler();
+      setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
+    };
+
+    const onRemovePopupClick = () => {
+      remove(this.filmPopup);
+      document.removeEventListener(`keydown`, onRemovePopupEsc);
+    };
+
+    const onRemovePopupEsc = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        remove(this.filmPopup);
+        document.removeEventListener(`keydown`, onRemovePopupEsc);
+      }
+    };
+
     if (oldFilm) {
       replace(this.filmCards, oldFilm);
       replace(this.filmPopup, oldPopup);
       setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
+      this.filmPopup.recoveryListeners();
+      this.filmPopup.setClickHandler(onRemovePopupClick);
+
     } else {
       render(this._container, this.filmCards);
     }
 
-    const setEventPopupOpenAndCloseHandlers = (container, filmInstance, popupInstance) => {
-      const filmDetails = document.querySelector(`#film-details`);
-      const onShowPopup = () => {
-        if (filmDetails) {
-          filmDetails.remove();
-        }
-        container.appendChild(popupInstance.getElement());
-        popupInstance.setClickHandler(onRemovePopupClick);
-        document.addEventListener(`keydown`, onRemovePopupEsc);
-        popupInstance.emojiListHandler();
-        setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
-      };
-
-      const onRemovePopupEsc = (evt) => {
-        if (evt.key === `Escape` || evt.key === `Esc`) {
-          remove(popupInstance);
-          document.removeEventListener(`keydown`, onRemovePopupEsc);
-        }
-      };
-
-      const onRemovePopupClick = () => {
-        remove(popupInstance);
-        document.removeEventListener(`keydown`, onRemovePopupEsc);
-      };
-
-      popupInstance.setClickHandler(onRemovePopupClick);
-      document.addEventListener(`keydown`, onRemovePopupEsc);
-
-      filmInstance.setClickHadnler(onShowPopup);
-    };
-
-    setEventPopupOpenAndCloseHandlers(this._container, this.filmCards, this.filmPopup);
+    this.filmCards.setClickHadnler(onShowPopup);
 
     setFilmCardsHandlers(film, this.filmCards, this._onDataChange);
+  }
 
-
+  _setDefaultView() {
+    remove(this.filmPopup);
   }
 }

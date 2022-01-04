@@ -1,4 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {getDuration, getDateForMoment, getHumanizeDate, getHumanizeDate2} from "../utils/moment.js";
+import moment from "moment";
+
 
 const renderComments = (comments) => {
   const arrComments = [];
@@ -11,7 +14,7 @@ const renderComments = (comments) => {
         <p class="film-details__comment-text">${comment.text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${comment.date}</span>
+          <span class="film-details__comment-day">${getDateForMoment(comment.date, `YYYY/MM/DD HH:mm`)}     ${getHumanizeDate2(comment.date)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -64,11 +67,11 @@ const createFilmDetailsPopup = (film, options = {}) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${film.filmYear.date} ${film.filmYear.year}</td>
+                  <td class="film-details__cell">${getDateForMoment(film.filmYear, `DD MMMM YYYY`)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${film.filmDuration}</td>
+                  <td class="film-details__cell">${getDuration(film)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

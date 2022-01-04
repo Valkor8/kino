@@ -22,9 +22,9 @@ const FILM_CARD_SHOW_BY_BUTTON = 5;
 const header = document.querySelector(`.header`);
 const footerStatistics = document.querySelector(`.footer__statistics`);
 
-const renderFilms = (container, films, onDataChange) => {
+const renderFilms = (container, films, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const movieController = new MovieController(container, onDataChange);
+    const movieController = new MovieController(container, onDataChange, onViewChange);
 
     movieController.render(film);
 
@@ -51,6 +51,7 @@ export default class PageController {
     this._mostCommented = new MostCommented();
 
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
   }
 
   render(films) {
@@ -74,7 +75,7 @@ export default class PageController {
       return;
     }
 
-    const newFilms = renderFilms(filmListMainContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange);
+    const newFilms = renderFilms(filmListMainContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
     this._showedFilmContollers = this._showedFilmContollers.concat(newFilms);
 
     render(filmlist, this._buttonShowMore);
@@ -85,7 +86,7 @@ export default class PageController {
     this._newTopRatedFilms = renderFilms(topRaitedContainer, this._films
       .slice()
       .sort((a, b) => b.rating - a.rating)
-      .slice(0, 2), this._onDataChange);
+      .slice(0, 2), this._onDataChange, this._onViewChange);
     this._showedFilmContollers = this._showedFilmContollers.concat(this._newTopRatedFilms);
 
     renderContainer(filmsElement, this._mostCommented);
@@ -95,7 +96,7 @@ export default class PageController {
     this._newMostCommentedFilms = renderFilms(mostCommentedContainer, this._films
       .slice()
       .sort((a, b) => b.comments.length - a.comments.length)
-      .slice(0, 2), this._onDataChange);
+      .slice(0, 2), this._onDataChange, this._onViewChange);
     this._showedFilmContollers = this._showedFilmContollers.concat(this._newMostCommentedFilms);
 
     render(footerStatistics, new Stats(TOTAL_FILMS));
@@ -108,7 +109,7 @@ export default class PageController {
       filmListContainer.innerHTML = ``;
       this._filmCardsSort = renderSortFilms(this._films, sortType);
 
-      const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange);
+      const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
       this._showedFilmContollers = newFilms.concat(this._newTopRatedFilms, this._newMostCommentedFilms);
       if (!this._container.querySelector(`.films-list__show-more`)) {
         render(filmList, this._buttonShowMore);
@@ -126,7 +127,7 @@ export default class PageController {
       let prevFilmCount = this._filmAmount;
       this._filmAmount += FILM_CARD_SHOW_BY_BUTTON;
 
-      const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(prevFilmCount, this._filmAmount), this._onDataChange);
+      const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(prevFilmCount, this._filmAmount), this._onDataChange, this._onViewChange);
       this._showedFilmContollers = this._showedFilmContollers.concat(newFilms);
 
       if (this._filmAmount >= this._films.length) {
@@ -153,5 +154,9 @@ export default class PageController {
     render(this._container, this._siteMenu, `afterbegin`);
 
     filmController.forEach((item) => item.render(this._films[index]));
+  }
+
+  _onViewChange() {
+    this._showedFilmContollers.forEach((item) => item._setDefaultView());
   }
 }

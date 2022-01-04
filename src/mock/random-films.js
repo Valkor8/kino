@@ -43,23 +43,23 @@ const ratings = [
 ];
 
 const filmYears = [
-  {date: `01 April`, year: 2010},
-  {date: `05 March`, year: 2019},
-  {date: `11 January`, year: 1938},
-  {date: `20 Febriary`, year: 1967},
-  {date: `04 April`, year: 1991},
-  {date: `30 June`, year: 2016},
-  {date: `19 July`, year: 2000},
+  `2010-05-11T00:00:00.000Z`,
+  `2019-05-11T00:00:00.000Z`,
+  `1938-05-11T00:00:00.000Z`,
+  `1967-05-11T00:00:00.000Z`,
+  `1990-05-11T00:00:00.000Z`,
+  `2016-05-11T00:00:00.000Z`,
+  `2000-05-11T00:00:00.000Z`
 ];
 
 const filmDurations = [
-  `1h 36m`,
-  `2h 16m`,
-  `1h 59m`,
-  `1h 45m`,
-  `3h 19m`,
-  `2h 15m`,
-  `1h 49m`
+  96,
+  136,
+  119,
+  105,
+  199,
+  135,
+  109
 ];
 
 const filmGenres = [

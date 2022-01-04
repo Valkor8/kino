@@ -1,5 +1,6 @@
 import {createElement} from "../utils/render.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {getDuration, getDateForMoment} from "../utils/moment.js";
 
 const createSectionFilms = () => {
   return (
@@ -18,8 +19,8 @@ const createFilmCard = (film) => {
         <h3 class="film-card__title film-card__click" data-id="${film.id}">${film.film}</h3>
         <p class="film-card__rating">${film.rating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${film.filmYear.year}</span>
-          <span class="film-card__duration">${film.filmDuration}</span>
+          <span class="film-card__year">${getDateForMoment(film.filmYear, `YYYY`)}</span>
+          <span class="film-card__duration">${getDuration(film)}</span>
           <span class="film-card__genre">${film.filmGenre.join(`, `)}</span>
         </p>
         <img src="${film.poster}" alt="" class="film-card__poster film-card__click" data-id="${film.id}">
@@ -33,6 +34,7 @@ const createFilmCard = (film) => {
     </article>`
   );
 };
+
 
 export default class FilmCards extends AbstractSmartComponent {
   constructor(film) {
