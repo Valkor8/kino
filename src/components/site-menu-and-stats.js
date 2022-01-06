@@ -1,6 +1,8 @@
 import AbstractComponent from "./abstract-component.js";
 
 
+
+
 const createSiteMenuAndStats = (obj) => {
   return (
     `<nav class="main-navigation">
@@ -21,7 +23,7 @@ export default class SiteMenu extends AbstractComponent {
     this._films = films;
   }
 
-  getSumFlags(films) {
+  _getSumFlags(films) {
     const obj = {
       watchlist: 0,
       history: 0,
@@ -42,6 +44,6 @@ export default class SiteMenu extends AbstractComponent {
   }
 
   getTemplate() {
-    return createSiteMenuAndStats(this.getSumFlags(this._films));
+    return createSiteMenuAndStats(this._getSumFlags(this._films));
   }
 }

@@ -162,7 +162,7 @@ const createEmoji = () => {
   }
 };
 
-const localEmotions = {
+export const localEmotions = {
   smile: false,
   sleeping: false,
   puke: false,
@@ -178,10 +178,12 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._cbWatchlist = null;
     this._cbWatched = null;
     this._cbFavorites = null;
+
+    this.localEmotions = localEmotions;
   }
 
   getTemplate() {
-    return createFilmDetailsPopup(this.film, localEmotions);
+    return createFilmDetailsPopup(this.film, this.localEmotions);
   }
 
   recoveryListeners() {
@@ -220,21 +222,21 @@ export default class FilmPopup extends AbstractSmartComponent {
     const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
     emojiList.addEventListener(`change`, (evt) => {
       if (evt.target.id === `emoji-smile`) {
-        localEmotions.smile = true;
-        localEmotions.sleeping = localEmotions.angry = localEmotions.puke = false;
+        this.localEmotions.smile = true;
+        this.localEmotions.sleeping = this.localEmotions.angry = this.localEmotions.puke = false;
       } if (evt.target.id === `emoji-sleeping`) {
-        localEmotions.sleeping = true;
-        localEmotions.smile = localEmotions.puke = localEmotions.angry = false;
+        this.localEmotions.sleeping = true;
+        this.localEmotions.smile = this.localEmotions.puke = this.localEmotions.angry = false;
       } if (evt.target.id === `emoji-puke`) {
-        localEmotions.puke = true;
-        localEmotions.smile = localEmotions.sleeping = localEmotions.angry = false;
+        this.localEmotions.puke = true;
+        this.localEmotions.smile = this.localEmotions.sleeping = this.localEmotions.angry = false;
       } if (evt.target.id === `emoji-angry`) {
-        localEmotions.angry = true;
-        localEmotions.smile = localEmotions.sleeping = localEmotions.puke = false;
+        this.localEmotions.angry = true;
+        this.localEmotions.smile = this.localEmotions.sleeping = this.localEmotions.puke = false;
       }
       this.rerender();
+      console.log(`localEmotions:`, localEmotions);
+      console.log(`this.localEmotions:`, this.localEmotions);
     });
   }
 }
-
-

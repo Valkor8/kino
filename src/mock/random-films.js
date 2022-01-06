@@ -140,11 +140,9 @@ const renderRandomFilm = () => {
   };
 };
 
-const RANDOM_FILM = 20;
-
-const getRandomFilmsArray = () => {
+const getRandomFilmsArray = (number) => {
   const randomFilms = [];
-  for (let i = 0; i < RANDOM_FILM; i++) {
+  for (let i = 0; i < number; i++) {
     randomFilms.push(renderRandomFilm());
     randomFilms[i].id = i;
   }

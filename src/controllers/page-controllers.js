@@ -33,7 +33,7 @@ const renderFilms = (container, films, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, filmModel) {
     this._container = container;
 
     this._films = [];
@@ -52,15 +52,18 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+
+    this._filmModel = filmModel;
   }
 
-  render(films) {
-    this._films = films;
-    this._filmCardsSort = films;
+  render() {
+    this._films = this._filmModel.getFilms();
+    this._filmCardsSort = this._filmModel.getFilms();
+
     render(header, new ProfileRating(randomProfileRating));
 
-    this._siteMenu = new SiteMenu(this._films);
-    render(this._container, this._siteMenu);
+    // this._siteMenu = new SiteMenu(this._films);
+    // render(this._container, this._siteMenu);
 
     render(this._container, this._sort);
 
@@ -107,7 +110,7 @@ export default class PageController {
     const filmList = this._container.querySelector(`.films-list`);
     this._sort.setSortTypeChangeHandler((sortType) => {
       filmListContainer.innerHTML = ``;
-      this._filmCardsSort = renderSortFilms(this._films, sortType);
+      this._filmCardsSort = renderSortFilms(this._filmModel.getFilms(), sortType);
 
       const newFilms = renderFilms(filmListContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
       this._showedFilmContollers = newFilms.concat(this._newTopRatedFilms, this._newMostCommentedFilms);
@@ -139,21 +142,13 @@ export default class PageController {
   }
 
   _onDataChange(oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
+    const isSucces = this._filmModel.updateFilm(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSucces) {
+      const filmController = this._showedFilmContollers.filter((item) => item.filmCards.film === oldData);
+      filmController.forEach((item) => item.render(newData));
     }
 
-    const filmController = this._showedFilmContollers.filter((item) => item.filmCards.film === oldData);
-
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
-    remove(this._siteMenu);
-    this._siteMenu = new SiteMenu(this._films);
-    render(this._container, this._siteMenu, `afterbegin`);
-
-    filmController.forEach((item) => item.render(this._films[index]));
   }
 
   _onViewChange() {

@@ -2,6 +2,7 @@ import FilmCards from "../components/film-card.js";
 import FilmPopup from "../components/film-details-popup.js";
 import {remove, render, replace} from "../utils/render.js";
 import {setFilmCardsHandlers, setFilmPopupHandlers} from "../utils/handlers.js";
+import {localEmotions} from "../components/film-details-popup.js";
 
 
 export default class MovieController {
@@ -32,13 +33,15 @@ export default class MovieController {
     };
 
     const onRemovePopupClick = () => {
-      remove(this.filmPopup);
+      // remove(this.filmPopup);
+      this.filmPopup.getElement().remove();
       document.removeEventListener(`keydown`, onRemovePopupEsc);
     };
 
     const onRemovePopupEsc = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        remove(this.filmPopup);
+        // remove(this.filmPopup);
+        this.filmPopup.getElement().remove();
         document.removeEventListener(`keydown`, onRemovePopupEsc);
       }
     };

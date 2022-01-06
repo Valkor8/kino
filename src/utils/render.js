@@ -1,4 +1,5 @@
 import {SortType as SortTypeObj} from "../components/sort.js";
+import {getDateForMoment} from "./moment.js";
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -48,7 +49,7 @@ export const renderSortFilms = (films, sortType) => {
   const filmCardsSort = films.slice();
   switch (sortType) {
     case SortTypeObj.DATE:
-      sortedFilms = filmCardsSort.sort((a, b) => b.filmYear.year - a.filmYear.year);
+      sortedFilms = filmCardsSort.sort((a, b) => +getDateForMoment(b.filmYear, `YYYY`) - (+getDateForMoment(a.filmYear, `YYYY`)));
       break;
     case SortTypeObj.RATING:
       sortedFilms = filmCardsSort.sort((a, b) => b.rating - a.rating);
