@@ -136,7 +136,11 @@ const renderRandomFilm = () => {
     actors: actors[randomIndex],
     country: countries[randomIndex],
     ageRating: ageRatings[randomIndex],
-    filter,
+    filter: {
+      watchlist: Math.random() > 0.5 ? true : false,
+      history: Math.random() > 0.5 ? true : false,
+      favorites: Math.random() > 0.5 ? true : false
+    }
   };
 };
 

@@ -33,15 +33,15 @@ export default class MovieController {
     };
 
     const onRemovePopupClick = () => {
-      // remove(this.filmPopup);
-      this.filmPopup.getElement().remove();
+      remove(this.filmPopup);
+      // this.filmPopup.getElement().remove();
       document.removeEventListener(`keydown`, onRemovePopupEsc);
     };
 
     const onRemovePopupEsc = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        // remove(this.filmPopup);
-        this.filmPopup.getElement().remove();
+        remove(this.filmPopup);
+        // this.filmPopup.getElement().remove();
         document.removeEventListener(`keydown`, onRemovePopupEsc);
       }
     };
@@ -64,5 +64,10 @@ export default class MovieController {
 
   _setDefaultView() {
     remove(this.filmPopup);
+  }
+
+  destroy() {
+    remove(this.filmPopup);
+    remove(this.filmCards);
   }
 }

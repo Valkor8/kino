@@ -235,8 +235,6 @@ export default class FilmPopup extends AbstractSmartComponent {
         this.localEmotions.smile = this.localEmotions.sleeping = this.localEmotions.puke = false;
       }
       this.rerender();
-      console.log(`localEmotions:`, localEmotions);
-      console.log(`this.localEmotions:`, this.localEmotions);
     });
   }
 }
