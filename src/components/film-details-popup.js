@@ -1,6 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {getDuration, getDateForMoment, getHumanizeDate, getHumanizeDate2} from "../utils/moment.js";
-import moment from "moment";
+import {getDuration, getDateForMoment, getHumanizeDate2} from "../utils/moment.js";
+
+export const EpmtyFilm = {};
 
 
 const renderComments = (comments) => {
@@ -15,7 +16,7 @@ const renderComments = (comments) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
           <span class="film-details__comment-day">${getDateForMoment(comment.date, `YYYY/MM/DD HH:mm`)}     ${getHumanizeDate2(comment.date)}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
         </p>
       </div>
     </li>`);
@@ -216,6 +217,21 @@ export default class FilmPopup extends AbstractSmartComponent {
   buttonAddToFavoriteHandler(cb) {
     this._cbFavorites = cb;
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._cbFavorites);
+  }
+
+  removeCommentHandler(arr, onDataChange) {
+    Array.from(this.getElement().querySelectorAll(`.film-details__comment-delete`)).forEach((item) => {
+      item.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        arr.forEach((comment, index) => {
+          if (comment.id === +evt.target.dataset.id) {
+            // arr.splice(index, 1, null);
+            // comment = null;
+            onDataChange(comment, null);
+          }
+        });
+      });
+    });
   }
 
   emojiListHandler() {

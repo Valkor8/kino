@@ -1,9 +1,8 @@
 import FilmCards from "../components/film-card.js";
 import FilmPopup from "../components/film-details-popup.js";
+import {localEmotions} from "../components/film-details-popup.js";
 import {remove, render, replace} from "../utils/render.js";
 import {setFilmCardsHandlers, setFilmPopupHandlers} from "../utils/handlers.js";
-import {localEmotions} from "../components/film-details-popup.js";
-
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -29,24 +28,35 @@ export default class MovieController {
       this.filmPopup.setClickHandler(onRemovePopupClick);
       document.addEventListener(`keydown`, onRemovePopupEsc);
       this.filmPopup.emojiListHandler();
+      this.filmPopup.removeCommentHandler(this.filmPopup.film.comments, this._onDataChange);
       setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
     };
 
     const onRemovePopupClick = () => {
       remove(this.filmPopup);
-      // this.filmPopup.getElement().remove();
       document.removeEventListener(`keydown`, onRemovePopupEsc);
+      // localEmotions = {
+      //   smile: false,
+      //   sleeping: false,
+      //   puke: false,
+      //   angry: false,
+      // };
     };
 
     const onRemovePopupEsc = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         remove(this.filmPopup);
-        // this.filmPopup.getElement().remove();
         document.removeEventListener(`keydown`, onRemovePopupEsc);
+        // localEmotions = {
+        //   smile: false,
+        //   sleeping: false,
+        //   puke: false,
+        //   angry: false,
+        // };
       }
     };
 
-    if (oldFilm) {
+    if (oldFilm && oldPopup) {
       replace(this.filmCards, oldFilm);
       replace(this.filmPopup, oldPopup);
       setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);

@@ -13,10 +13,11 @@ console.log(randomFilms);
 const movieModel = new Movies();
 movieModel.setFilms(randomFilms);
 
-const pageController = new PageController(main, movieModel);
 const siteMenuController = new SiteMenuController(main, movieModel);
+const pageController = new PageController(main, movieModel, siteMenuController);
 
 siteMenuController.render();
 pageController.render();
 pageController._renderOnButtonClick();
 pageController._setSortTypeChangeHadnler();
+

@@ -41,6 +41,7 @@ const getRandomComment = () => {
   const comments = [];
   for (let i = 0; i < getRandomIndexArray(0, MAX_COMMENTS); i++) {
     const comment = {
+      id: Math.floor(new Date() * Math.random()),
       text: commentsText[getRandomIndexArray(0, commentsText.length)],
       emotion: commentsEmotion[getRandomIndexArray(0, commentsEmotion.length)],
       author: commentsAuthor[getRandomIndexArray(0, commentsAuthor.length)],

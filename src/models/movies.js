@@ -8,6 +8,7 @@ export default class Movies {
 
     this._dataChangeHadlers = [];
     this._filterChangeHandlers = [];
+    this._filterCountChangeHandlers = [];
   }
 
   getFilms() {
@@ -26,7 +27,32 @@ export default class Movies {
   setFilter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
-    console.log(this._filterChangeHandlers);
+  }
+
+  removeComments(id) {
+    let filmIndex = null;
+    let commentIndex = null;
+
+    this._films.forEach((film, filmInd) => {
+      film.comments.forEach((it, comIndex) => {
+        if (it.id === id) {
+          filmIndex = filmInd;
+          commentIndex = comIndex;
+          return;
+        }
+      });
+    });
+
+    if (!commentIndex && commentIndex !== 0) {
+      return false;
+    }
+
+    this._films[filmIndex].comments.splice(commentIndex, 1);
+
+
+    this._callHandlers(this._dataChangeHadlers);
+    console.log(this._films);
+    return true;
   }
 
   updateFilm(id, newData) {
@@ -39,8 +65,13 @@ export default class Movies {
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
 
     this._callHandlers(this._dataChangeHadlers);
+    this._callHandlers(this._filterCountChangeHandlers);
 
     return true;
+  }
+
+  addComments() {
+
   }
 
   setDataChangeHandler(handler) {
@@ -51,9 +82,11 @@ export default class Movies {
     this._filterChangeHandlers.push(handler);
   }
 
+  setFilterCountChangeHandler(handler) {
+    this._filterCountChangeHandlers.push(handler);
+  }
+
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }
-
-
 }
