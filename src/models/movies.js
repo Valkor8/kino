@@ -29,29 +29,29 @@ export default class Movies {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-  removeComments(id) {
-    let filmIndex = null;
-    let commentIndex = null;
+  removeComments(oldData, id) {
+    const currentFilm = this._films.filter((film) => film.id === oldData.id);
+    const index = currentFilm[0].comments.findIndex((comment) => comment.id === id);
 
-    this._films.forEach((film, filmInd) => {
-      film.comments.forEach((it, comIndex) => {
-        if (it.id === id) {
-          filmIndex = filmInd;
-          commentIndex = comIndex;
-          return;
-        }
-      });
-    });
-
-    if (!commentIndex && commentIndex !== 0) {
+    if (index === -1) {
       return false;
     }
 
-    this._films[filmIndex].comments.splice(commentIndex, 1);
-
+    oldData.comments = [].concat(oldData.comments.slice(0, index), (oldData.comments.slice(index + 1)));
 
     this._callHandlers(this._dataChangeHadlers);
-    console.log(this._films);
+    return true;
+  }
+
+  addComments(newData) {
+    const index = this._films.findIndex((film) => film.id === newData.id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+    this._callHandlers(this._dataChangeHadlers);
     return true;
   }
 
@@ -68,10 +68,6 @@ export default class Movies {
     this._callHandlers(this._filterCountChangeHandlers);
 
     return true;
-  }
-
-  addComments() {
-
   }
 
   setDataChangeHandler(handler) {

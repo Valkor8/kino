@@ -116,7 +116,7 @@ const createFilmDetailsPopup = (film, options = {}) => {
               </div>
 
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" required minlength="1" maxlength="500"></textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -148,6 +148,12 @@ const createFilmDetailsPopup = (film, options = {}) => {
   );
 };
 
+export let localEmotions = {
+  smile: false,
+  sleeping: false,
+  puke: false,
+  angry: false,
+};
 
 const createEmoji = () => {
   if (localEmotions.smile === true) {
@@ -163,13 +169,6 @@ const createEmoji = () => {
   }
 };
 
-export const localEmotions = {
-  smile: false,
-  sleeping: false,
-  puke: false,
-  angry: false,
-};
-
 export default class FilmPopup extends AbstractSmartComponent {
   constructor(film) {
     super();
@@ -181,6 +180,9 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._cbFavorites = null;
 
     this.localEmotions = localEmotions;
+
+    this._film = ``;
+    this._onDataChange = ``;
   }
 
   getTemplate() {
@@ -193,6 +195,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.buttonMarkAsWatchedHandler(this._cbWatched);
     this.buttonAddToFavoriteHandler(this._cbFavorites);
     this.emojiListHandler();
+    this.removeCommentHandler(this._film, this._onDataChange);
   }
 
   rerender() {
@@ -219,15 +222,17 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._cbFavorites);
   }
 
-  removeCommentHandler(arr, onDataChange) {
+  removeCommentHandler(film, onDataChange) {
+    this._film = film;
+    this._onDataChange = onDataChange;
+
     Array.from(this.getElement().querySelectorAll(`.film-details__comment-delete`)).forEach((item) => {
       item.addEventListener(`click`, (evt) => {
+        const arr = this._film.comments;
         evt.preventDefault();
-        arr.forEach((comment, index) => {
+        arr.forEach((comment) => {
           if (comment.id === +evt.target.dataset.id) {
-            // arr.splice(index, 1, null);
-            // comment = null;
-            onDataChange(comment, null);
+            onDataChange(film, null, comment);
           }
         });
       });
@@ -252,5 +257,9 @@ export default class FilmPopup extends AbstractSmartComponent {
       }
       this.rerender();
     });
+  }
+
+  resetCommnets() {
+    this.localEmotions.smile = this.localEmotions.sleeping = this.localEmotions.puke = this.localEmotions.angry = false;
   }
 }

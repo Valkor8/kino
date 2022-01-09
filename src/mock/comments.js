@@ -19,7 +19,7 @@ const emotionImg = [
   `./images/emoji/angry.png`,
 ];
 
-const commentsAuthor = [
+export const commentsAuthor = [
   `Ahilles`,
   `Gector`,
   `Ajax`,
