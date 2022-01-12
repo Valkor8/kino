@@ -4,6 +4,7 @@ import {remove, render, replace} from "../utils/render.js";
 import {setFilmCardsHandlers, setFilmPopupHandlers} from "../utils/handlers.js";
 import {getRandomIndexArray} from "../mock/random-generator.js";
 import {commentsAuthor} from "../mock/comments.js";
+import {encode} from "he";
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -42,16 +43,16 @@ export default class MovieController {
     const addCommentHandler = (evt) => {
       if ((evt.ctrlKey || evt.metaKey) && evt.key === `Enter`) {
         const form = this.filmPopup.getElement().querySelector(`.film-details__inner`);
-        const inputValue = form.querySelector(`.film-details__comment-input`).value;
+        const notSanitazedInputValue = form.querySelector(`.film-details__comment-input`).value;
         const emotionImg = form.querySelector(`.film-details__add-emoji-label img`).getAttribute(`src`);
-
-        if (!inputValue || !emotionImg) {
+        const textComment = encode(notSanitazedInputValue);
+        if (!notSanitazedInputValue || !emotionImg) {
           return;
         }
 
         const comment = {
           id: Math.floor(new Date() * Math.random()),
-          text: inputValue,
+          text: textComment,
           emotion: `smile`,
           author: commentsAuthor[getRandomIndexArray(0, commentsAuthor.length)],
           date: new Date(),

@@ -11,7 +11,7 @@ import {remove, render, renderContainer, replace} from "../utils/render.js";
 import {randomProfileRating} from "../mock/random-rating.js";
 import {getRandomInt} from "../mock/random-generator.js";
 import {renderSortFilms} from "../utils/render.js";
-import { EpmtyFilm } from "../components/film-details-popup.js";
+import {EpmtyFilm} from "../components/film-details-popup.js";
 
 
 const TOTAL_FILMS = getRandomInt(1000, 100000);
@@ -67,13 +67,13 @@ export default class PageController {
 
     render(header, new ProfileRating(randomProfileRating));
 
-    render(this._container, this._sort);
-
     renderContainer(this._container, this.filmCards);
 
     this._filmsElement = this._container.querySelector(`.films`);
     this._filmListMainContainer = this._container.querySelector(`.films-list__container-main`);
     const filmlist = this._container.querySelector(`.films-list`);
+
+    render(this._filmsElement, this._sort, `afterbegin`);
 
     if (this._films.length === 0 || !this._films) {
       render(this._container, new MessageNoFilm());
@@ -231,5 +231,13 @@ export default class PageController {
   _removeFilms() {
     this._showedMainFilmControllers.forEach((filmController) => filmController.destroy());
     this._showedMainFilmControllers = [];
+  }
+
+  show() {
+    this._filmsElement.classList.remove(`visually-hidden`);
+  }
+
+  hide() {
+    this._filmsElement.classList.add(`visually-hidden`);
   }
 }
