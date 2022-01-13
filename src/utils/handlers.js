@@ -32,6 +32,7 @@ export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
       filter: {
         watchlist: film.filter.watchlist ? false : true,
         history: film.filter.history,
+        watchingDate: new Date(),
         favorites: film.filter.favorites,
       }
     }));

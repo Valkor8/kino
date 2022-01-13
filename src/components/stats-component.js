@@ -1,10 +1,8 @@
-import moment from "moment";
+import moment, { months } from "moment";
 import AbstractSmartComponent from "./abstract-smart-component";
-// import {Chart} from "chart.js";
-// import {Chart, registerables} from 'chart.js';
-// Chart.register(...registerables);
 import {Chart} from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
+
 
 const getWatchedFilm = (films) => {
   let count = 0;
@@ -32,6 +30,51 @@ const getWatchedFilmDurationInHours = (films) => {
   const hours = moment.duration(filmMinutes * 1000 * 60).hours();
 
   return days * 24 + hours;
+};
+
+const getFilterHistoryWeekFilms = (films) => {
+  const filterHistoryFilms = [];
+  films.forEach((item) => {
+    const date = (new Date() - moment(item.filter.watchingDate)) / 1000 / 60 / 60
+    if (date < (7 * 24)) {
+      filterHistoryFilms.push(item);
+    }
+  });
+  return filterHistoryFilms;
+};
+
+const getHistoryGenre = (films) => {
+  let historyFilms = [];
+  films.forEach((film) => {
+    if (film.filter.history) {
+      historyFilms = historyFilms.concat(film.filmGenre);
+    }
+  });
+  return historyFilms;
+};
+
+const getTopGenre = (films) => {
+  const historyFilms = getHistoryGenre(films);
+  const genres = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
+
+  const sciFi = historyFilms.filter((item) => item === `Sci-Fi`);
+  const animation = historyFilms.filter((item) => item === `Animation`);
+  const fantasy = historyFilms.filter((item) => item === `Fantasy`);
+  const comedy = historyFilms.filter((item) => item === `Comedy`);
+  const TVSeries = historyFilms.filter((item) => item === `TV Series`);
+
+  const genresLength = [sciFi.length, animation.length, fantasy.length, comedy.length, TVSeries.length];
+
+  let arrIndex = 0;
+
+  genresLength.forEach((item, index) => {
+    let max = 0;
+    if (max < item) {
+      max = item;
+      arrIndex = index;
+    }
+  });
+  return genres[arrIndex];
 };
 
 const createStats = (films) => {
@@ -73,7 +116,7 @@ const createStats = (films) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Sci-Fi</p>
+          <p class="statistic__item-text">${getTopGenre(films)}</p>
         </li>
       </ul>
 
@@ -106,6 +149,18 @@ export default class StatsComponent extends AbstractSmartComponent {
   }
 
   chart() {
+    const films = getFilterHistoryWeekFilms(this._model.getFilmsAll());
+    console.log(films)
+    let historyFilms = getHistoryGenre(films);
+    if (historyFilms.length === 0) {
+      return;
+    }
+    const sciFi = historyFilms.filter((item) => item === `Sci-Fi`);
+    const animation = historyFilms.filter((item) => item === `Animation`);
+    const fantasy = historyFilms.filter((item) => item === `Fantasy`);
+    const comedy = historyFilms.filter((item) => item === `Comedy`);
+    const TVSeries = historyFilms.filter((item) => item === `TV Series`);
+
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
     // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
@@ -116,7 +171,7 @@ export default class StatsComponent extends AbstractSmartComponent {
       data: {
         labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
         datasets: [{
-          data: [11, 8, 7, 4, 3],
+          data: [sciFi.length, animation.length, fantasy.length, comedy.length, TVSeries.length],
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`

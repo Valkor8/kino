@@ -1,3 +1,4 @@
+import moment from "moment";
 import {getRandomComment} from "./comments.js";
 import {getRandomIndexArray} from "./random-generator.js";
 
@@ -63,12 +64,11 @@ const filmDurations = [
 ];
 
 const filmGenres = [
-  `Musical`,
-  `Western`,
-  `Drama`,
+  `Sci-Fi`,
+  `Animation`,
+  `Fantasy`,
   `Comedy`,
-  `Cartoon`,
-  `Mystery`,
+  `TV Series`,
 ];
 
 const directors = [
@@ -117,6 +117,15 @@ const filter = {
   favorites: false
 };
 
+const watchingDate = [
+  `2021-12-30T17:36:32.554Z`,
+  `2021-12-29T11:44:32.554Z`,
+  `2022-01-04T01:01:32.554Z`,
+  `2022-01-10T22:24:32.554Z`,
+  `2022-01-12T22:20:32.554Z`,
+];
+
+
 const getRandomArrayElement = (arr) => arr[getRandomIndexArray(0, arr.length)];
 
 const getRandomArrayLength = (arr) => arr.slice(getRandomIndexArray(0, arr.length));
@@ -139,6 +148,7 @@ const renderRandomFilm = () => {
     filter: {
       watchlist: Math.random() > 0.5 ? true : false,
       history: Math.random() > 0.5 ? true : false,
+      watchingDate: getRandomArrayElement(watchingDate),
       favorites: Math.random() > 0.5 ? true : false
     }
   };
@@ -152,5 +162,6 @@ const getRandomFilmsArray = (number) => {
   }
   return randomFilms;
 };
+
 
 export {getRandomFilmsArray};
