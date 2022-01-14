@@ -32,7 +32,7 @@ export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
       filter: {
         watchlist: film.filter.watchlist ? false : true,
         history: film.filter.history,
-        watchingDate: new Date(),
+        watchingDate: film.filter.watchingDate,
         favorites: film.filter.favorites,
       }
     }));
@@ -44,6 +44,7 @@ export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
       filter: {
         watchlist: film.filter.watchlist,
         history: film.filter.history ? false : true,
+        watchingDate: film.filter.watchingDate === `` ? new Date().toISOString() : ``,
         favorites: film.filter.favorites,
       }
     }));
@@ -55,6 +56,7 @@ export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
       filter: {
         watchlist: film.filter.watchlist,
         history: film.filter.history,
+        watchingDate: film.filter.watchingDate,
         favorites: film.filter.favorites ? false : true,
       }
     }));
@@ -69,6 +71,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: true,
           history: film.filter.history,
+          watchingDate: film.filter.watchingDate,
           favorites: film.filter.favorites,
         }
       }));
@@ -77,6 +80,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: false,
           history: film.filter.history,
+          watchingDate: film.filter.watchingDate,
           favorites: film.filter.favorites,
         }
       }));
@@ -89,6 +93,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: film.filter.watchlist,
           history: true,
+          watchingDate: new Date().toISOString(),
           favorites: film.filter.favorites,
         }
       }));
@@ -97,6 +102,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: film.filter.watchlist,
           history: false,
+          watchingDate: ``,
           favorites: film.filter.favorites,
         }
       }));
@@ -109,6 +115,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: film.filter.watchlist,
           history: film.filter.history,
+          watchingDate: film.filter.watchingDate,
           favorites: true,
         }
       }));
@@ -117,6 +124,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: film.filter.watchlist,
           history: film.filter.history,
+          watchingDate: film.filter.watchingDate,
           favorites: false,
         }
       }));

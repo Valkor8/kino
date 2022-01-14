@@ -11,7 +11,6 @@ import {remove, render, renderContainer, replace} from "../utils/render.js";
 import {randomProfileRating} from "../mock/random-rating.js";
 import {getRandomInt} from "../mock/random-generator.js";
 import {renderSortFilms} from "../utils/render.js";
-import {EpmtyFilm} from "../components/film-details-popup.js";
 
 
 const TOTAL_FILMS = getRandomInt(1000, 100000);

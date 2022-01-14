@@ -1,4 +1,3 @@
-import moment from "moment";
 import {getRandomComment} from "./comments.js";
 import {getRandomIndexArray} from "./random-generator.js";
 
@@ -111,18 +110,16 @@ const ageRatings = [
   `0+`
 ];
 
-const filter = {
-  watchlist: false,
-  history: false,
-  favorites: false
-};
-
 const watchingDate = [
   `2021-12-30T17:36:32.554Z`,
   `2021-12-29T11:44:32.554Z`,
   `2022-01-04T01:01:32.554Z`,
   `2022-01-10T22:24:32.554Z`,
   `2022-01-12T22:20:32.554Z`,
+  `2022-01-01T22:20:32.554Z`,
+  `2021-11-30T17:36:32.554Z`,
+  `2021-07-30T17:36:32.554Z`,
+  `2022-01-14T14:20:32.554Z`,
 ];
 
 
@@ -132,6 +129,7 @@ const getRandomArrayLength = (arr) => arr.slice(getRandomIndexArray(0, arr.lengt
 
 const renderRandomFilm = () => {
   const randomIndex = getRandomIndexArray(0, films.length);
+  const randomFlag = Math.random() > 0.5 ? true : false;
   return {
     film: films[randomIndex],
     poster: posters[randomIndex],
@@ -147,8 +145,8 @@ const renderRandomFilm = () => {
     ageRating: ageRatings[randomIndex],
     filter: {
       watchlist: Math.random() > 0.5 ? true : false,
-      history: Math.random() > 0.5 ? true : false,
-      watchingDate: getRandomArrayElement(watchingDate),
+      history: randomFlag,
+      watchingDate: randomFlag ? getRandomArrayElement(watchingDate) : ``,
       favorites: Math.random() > 0.5 ? true : false
     }
   };

@@ -29,6 +29,7 @@ stats.hide(stats.getElement());
 
 siteMenuController.movieAndStatsToggle(
     () => {
+      stats.getActualFilms();
       stats.rerender();
       stats.chart();
       stats.show(stats.getElement());
