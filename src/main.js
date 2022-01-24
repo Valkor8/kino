@@ -6,6 +6,7 @@ import Movies from "./models/movies.js";
 import StatsComponent from "./components/stats-component.js";
 import {render} from "./utils/render.js";
 import Movie from "./models/movie.js";
+import MessageLoading from "./components/loading-message.js";
 
 
 const RANDOM_FILM = 20;
@@ -18,7 +19,6 @@ console.log(randomFilms);
 
 const api = new API(AUTHORIZATION);
 const movieModel = new Movies();
-// movieModel.setFilms(randomFilms);
 
 const siteMenuController = new SiteMenuController(main, movieModel);
 const stats = new StatsComponent(movieModel);
@@ -26,14 +26,17 @@ const pageController = new PageController(main, movieModel, siteMenuController);
 
 siteMenuController.render();
 render(main, stats);
-// pageController.render();
+
+const messageLoading = new MessageLoading();
+render(main, messageLoading);
 
 api.getFilms()
   .then((films) => {
+    messageLoading.deleteMessage();
     console.log(films);
-    const parseFilms = Movie.parseFilms(films);
-    console.log(parseFilms);
-    movieModel.setFilms(parseFilms);
+    const parsedFilms = Movie.parseFilms(films);
+    console.log(parsedFilms);
+    movieModel.setFilms(parsedFilms);
     pageController.render();
   });
 

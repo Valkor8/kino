@@ -7,7 +7,7 @@ const API = class {
     const headers = new Headers();
     headers.append(`Authorization`, `Basic joifoin45jknfjkdf`);
 
-    return fetch(`https://13.ecmascript.pages.academy/cinemaddict/movies`, {headers})
+    return fetch(`https://16.ecmascript.pages.academy/cinemaddict/movies`, {headers})
       .then((responce) => responce.json());
   }
 };

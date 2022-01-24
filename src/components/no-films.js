@@ -13,6 +13,6 @@ const createMessageNoFilms = () => {
 export default class MessageNoFilm extends AbstractComponent {
 
   getTemplate() {
-    return createMessageNoFilms(this.rating);
+    return createMessageNoFilms();
   }
 }
