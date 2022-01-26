@@ -1,18 +1,32 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {getDuration, getDateForMoment, getHumanizeDate2} from "../utils/moment.js";
 
-export const EpmtyFilm = {};
-
+const getEmotionImg = (emotion) => {
+  if (emotion === `smile`) {
+    return `./images/emoji/smile.png`;
+  } else if (emotion === `sleeping`) {
+    return `./images/emoji/sleeping.png`;
+  } else if (emotion === `puke`) {
+    return `./images/emoji/puke.png`;
+  } else if (emotion === `angry`) {
+    return `./images/emoji/angry.png`;
+  } else {
+    return ``;
+  }
+};
 
 const renderComments = (comments) => {
+  if (comments.length === 0) {
+    return `<li><h2>An error occurred while uploading comments</h2></li>`;
+  }
   const arrComments = [];
   comments.forEach((comment) => {
     arrComments.push(`<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="${comment.img}" width="55" height="55" alt="emoji-${comment.commentsEmotion}">
+        <img src="${getEmotionImg(comment.emotion)}" width="55" height="55" alt="emoji-${comment.emotion}">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment.text}</p>
+        <p class="film-details__comment-text">${comment.comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
           <span class="film-details__comment-day">${getDateForMoment(comment.date, `YYYY/MM/DD HH:mm`)}     ${getHumanizeDate2(comment.date)}</span>
@@ -21,7 +35,7 @@ const renderComments = (comments) => {
       </div>
     </li>`);
   });
-  return arrComments;
+  return arrComments.join(`\n`);
 };
 
 const createFilmDetailsPopup = (film, options = {}) => {
@@ -60,11 +74,11 @@ const createFilmDetailsPopup = (film, options = {}) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                  <td class="film-details__cell">${film.writers.join(`, `)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${film.actors}</td>
+                  <td class="film-details__cell">${film.actors.join(`, `)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
@@ -108,7 +122,7 @@ const createFilmDetailsPopup = (film, options = {}) => {
           <section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
           <ul class="film-details__comments-list">
-            ${renderComments(comments).join(`\n`)}
+            ${renderComments(comments)}
           </ul>
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
@@ -170,7 +184,7 @@ const createEmoji = () => {
 };
 
 export default class FilmPopup extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, authorization) {
     super();
     this.film = film;
 
@@ -183,6 +197,8 @@ export default class FilmPopup extends AbstractSmartComponent {
 
     this._film = ``;
     this._onDataChange = ``;
+
+    this._authorization = authorization;
   }
 
   getTemplate() {
@@ -262,4 +278,5 @@ export default class FilmPopup extends AbstractSmartComponent {
   resetCommnets() {
     this.localEmotions.smile = this.localEmotions.sleeping = this.localEmotions.puke = this.localEmotions.angry = false;
   }
+
 }

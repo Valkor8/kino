@@ -11,6 +11,7 @@ import {remove, render, renderContainer, replace} from "../utils/render.js";
 import {randomProfileRating} from "../mock/random-rating.js";
 import {getRandomInt} from "../mock/random-generator.js";
 import {renderSortFilms} from "../utils/render.js";
+import Movie from "../models/movie.js";
 
 
 const TOTAL_FILMS = getRandomInt(1000, 100000);
@@ -32,9 +33,9 @@ export const renderFilms = (container, films, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container, filmModel, siteMenuController) {
+  constructor(container, filmsModel, siteMenuController, api) {
     this._container = container;
-    this._filmModel = filmModel;
+    this._filmsModel = filmsModel;
     this._siteMenuController = siteMenuController;
 
     this._films = [];
@@ -47,6 +48,8 @@ export default class PageController {
     this._filmsElement = ``;
     this._filmAmount = FILM_CARDS_AMOUNT;
 
+    this._api = api;
+
     this._sort = new Sort();
     this.filmCards = new FilmCards();
     this._buttonShowMore = new ButtonShowMore();
@@ -57,12 +60,12 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
-    this._filmModel.setFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
-    this._films = this._filmModel.getFilms();
-    this._filmCardsSort = this._filmModel.getFilms();
+    this._films = this._filmsModel.getFilms();
+    this._filmCardsSort = this._filmsModel.getFilms();
 
     render(header, new ProfileRating(randomProfileRating));
 
@@ -127,7 +130,7 @@ export default class PageController {
   _setSortTypeChangeHadnler() {
     this._sort.setSortTypeChangeHandler((sortType) => {
       this._removeFilms();
-      this._filmCardsSort = renderSortFilms(this._filmModel.getFilms(), sortType);
+      this._filmCardsSort = renderSortFilms(this._filmsModel.getFilms(), sortType);
 
       const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
       this._showedMainFilmControllers = newFilms;
@@ -176,7 +179,7 @@ export default class PageController {
 
   _onDataChange(oldData, newData, comment) {
     if (newData === null) {
-      const isRemove = this._filmModel.removeComments(oldData, comment.id);
+      const isRemove = this._filmsModel.removeComments(oldData, comment.id);
 
       if (isRemove) {
         const delCommentFilmController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === oldData.id);
@@ -186,7 +189,7 @@ export default class PageController {
       }
     } else if (oldData === null) {
       if (newData) {
-        const isAdd = this._filmModel.addComments(newData);
+        const isAdd = this._filmsModel.addComments(newData);
 
         if (isAdd) {
           const addCommentController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === newData.id);
@@ -194,12 +197,16 @@ export default class PageController {
         }
       }
     } else {
-      const isSucces = this._filmModel.updateFilm(oldData.id, newData);
+      this._api.updateFilms(oldData.id, newData)
+        .then((filmModel) => {
+          console.log(filmModel)
+          const isSucces = this._filmsModel.updateFilm(oldData.id, filmModel);
 
-      if (isSucces) {
-        const filmController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === oldData.id);
-        filmController.forEach((item) => item.render(newData));
-      }
+          if (isSucces) {
+            const filmController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === oldData.id);
+            filmController.forEach((item) => item.render(filmModel));
+          }
+        });
     }
   }
 
@@ -216,7 +223,7 @@ export default class PageController {
 
   _onFilterChange() {
     this._removeFilms();
-    this._filmCardsSort = this._filmModel.getFilms();
+    this._filmCardsSort = this._filmsModel.getFilms();
     const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(0, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
 
     this._replaceSort();

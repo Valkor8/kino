@@ -77,7 +77,6 @@ const getFilterHistoryInYearFilms = (films) => {
   return filterHistoryFilms;
 };
 
-
 const getHistoryGenre = (films) => {
   let historyFilms = [];
   films.forEach((film) => {
@@ -90,25 +89,30 @@ const getHistoryGenre = (films) => {
 
 const getTopGenre = (films) => {
   const historyFilms = getHistoryGenre(films);
-  const genres = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
+  const genres = [`Drama`, `Sci-Fi`, `Animation`, `Family`, `Comedy`, `Horror`, `Adventure`, `Thriller`, `Action`];
 
+  const drama = historyFilms.filter((item) => item === `Drama`);
   const sciFi = historyFilms.filter((item) => item === `Sci-Fi`);
   const animation = historyFilms.filter((item) => item === `Animation`);
-  const fantasy = historyFilms.filter((item) => item === `Fantasy`);
+  const family = historyFilms.filter((item) => item === `Family`);
   const comedy = historyFilms.filter((item) => item === `Comedy`);
-  const TVSeries = historyFilms.filter((item) => item === `TV Series`);
+  const horror = historyFilms.filter((item) => item === `Horror`);
+  const adventure = historyFilms.filter((item) => item === `Adventure`);
+  const thriller = historyFilms.filter((item) => item === `Thriller`);
+  const action = historyFilms.filter((item) => item === `Action`);
 
-  const genresLength = [sciFi.length, animation.length, fantasy.length, comedy.length, TVSeries.length];
+  const genresLength = [drama.length, sciFi.length, animation.length, family.length, comedy.length, horror.length, adventure.length, thriller.length, action.length];
 
   let arrIndex = -1;
+  let max = 0;
 
   genresLength.forEach((item, index) => {
-    let max = 0;
     if (max < item) {
       max = item;
       arrIndex = index;
     }
   });
+
   if (arrIndex === -1) {
     return ``;
   } else {
@@ -256,23 +260,27 @@ export default class StatsComponent extends AbstractSmartComponent {
     if (historyFilms.length === 0) {
       return;
     }
+    const drama = historyFilms.filter((item) => item === `Drama`);
     const sciFi = historyFilms.filter((item) => item === `Sci-Fi`);
     const animation = historyFilms.filter((item) => item === `Animation`);
-    const fantasy = historyFilms.filter((item) => item === `Fantasy`);
+    const family = historyFilms.filter((item) => item === `Family`);
     const comedy = historyFilms.filter((item) => item === `Comedy`);
-    const TVSeries = historyFilms.filter((item) => item === `TV Series`);
+    const horror = historyFilms.filter((item) => item === `Horror`);
+    const adventure = historyFilms.filter((item) => item === `Adventure`);
+    const thriller = historyFilms.filter((item) => item === `Thriller`);
+    const action = historyFilms.filter((item) => item === `Action`);
 
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
     // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
-    statisticCtx.height = BAR_HEIGHT * 5;
+    statisticCtx.height = BAR_HEIGHT * 9;
     const myChart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+        labels: [`Drama`, `Sci-Fi`, `Animation`, `Family`, `Comedy`, `Horror`, `Adventure`, `Thriller`, `Action`],
         datasets: [{
-          data: [sciFi.length, animation.length, fantasy.length, comedy.length, TVSeries.length],
+          data: [drama.length, sciFi.length, animation.length, family.length, comedy.length, horror.length, adventure.length, thriller.length, action.length],
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`
