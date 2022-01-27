@@ -48,7 +48,7 @@ export default class Movie {
         writers: data.writers
       },
 
-      comments: data.comments.map((comment) => comment.id),
+      comments: data.comments.map((comment) => this.toString(comment.id)),
 
       user_details: {
         already_watched: data.filter.history,

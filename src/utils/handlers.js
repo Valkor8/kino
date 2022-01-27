@@ -27,6 +27,7 @@ export const setEventPopupOpenAndCloseHandlers = (container, filmInstance, popup
 
 export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
   filmCard.buttonAddToWatchlistHandler((evt) => {
+    console.log(film)
     evt.preventDefault();
     onDataChange(film, Object.assign({}, film, {
       filter: {
@@ -44,7 +45,7 @@ export const setFilmCardsHandlers = (film, filmCard, onDataChange) => {
       filter: {
         watchlist: film.filter.watchlist,
         history: film.filter.history ? false : true,
-        watchingDate: film.filter.watchingDate === `` ? new Date().toISOString() : ``,
+        watchingDate: film.filter.watchingDate === null ? new Date().toISOString() : null,
         favorites: film.filter.favorites,
       }
     }));
@@ -102,7 +103,7 @@ export const setFilmPopupHandlers = (film, filmPopup, onDataChange) => {
         filter: {
           watchlist: film.filter.watchlist,
           history: false,
-          watchingDate: ``,
+          watchingDate: null,
           favorites: film.filter.favorites,
         }
       }));

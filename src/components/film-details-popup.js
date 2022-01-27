@@ -16,6 +16,7 @@ const getEmotionImg = (emotion) => {
 };
 
 const renderComments = (comments) => {
+  console.log(comments)
   if (comments.length === 0) {
     return `<li><h2>An error occurred while uploading comments</h2></li>`;
   }

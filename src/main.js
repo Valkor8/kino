@@ -42,9 +42,9 @@ const renderSiteMenu = () => {
 
 api.getFilms()
   .then((films) => {
+    console.log(films);
     messageLoading.deleteMessage();
     movieModel.setFilms(films);
-    console.log(movieModel.getFilmsAll())
     renderSiteMenu();
     render(main, stats);
     pageController.render();

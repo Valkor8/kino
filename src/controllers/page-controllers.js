@@ -199,9 +199,8 @@ export default class PageController {
     } else {
       this._api.updateFilms(oldData.id, newData)
         .then((filmModel) => {
-          console.log(filmModel)
           const isSucces = this._filmsModel.updateFilm(oldData.id, filmModel);
-
+          console.log(filmModel)
           if (isSucces) {
             const filmController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === oldData.id);
             filmController.forEach((item) => item.render(filmModel));

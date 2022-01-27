@@ -87,6 +87,8 @@ export default class MovieController {
       replace(this.filmCards, oldFilm);
       replace(this.filmPopup, oldPopup);
 
+      console.log(film)
+
       setFilmPopupHandlers(film, this.filmPopup, this._onDataChange);
       this.filmPopup.emojiListHandler();
       this.filmPopup.setClickHandler(onRemovePopupClick);
