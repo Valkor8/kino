@@ -1,51 +1,45 @@
 import Movie from "./models/movie.js";
 
+const checkStatus = (responce) => {
+  if (responce.status >= 200 && responce.status < 300) {
+    const resp = responce.json();
+    console.log(resp)
+    return resp;
+  } else {
+    // throw new Error(`${responce.status}: ${responce.statusText}`);
+    return [];
+  }
+};
+
 const API = class {
-  constructor(authorization) {
+  constructor(authorization, END_POINT) {
     this._authorization = authorization;
+
+    this._endPoint = END_POINT;
   }
 
   getFilms() {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://16.ecmascript.pages.academy/cinemaddict/movies`, {headers})
-      .then((responce) => {
-        if (responce.ok) {
-          return responce.json();
-        } else if (responce.status === 404) {
-          return [];
-        }
-        throw new Error(`Неизвестный статус ${responce.status} ${responce.statusText}`);
-      })
+    return this._load({url: `movies`})
       .then(Movie.parseFilms)
-      .then((films) => this._getComments(films, headers))
+      .then((films) => this._getComments(films))
       .then((promises) => Promise.all(promises))
       .catch(() => []);
   }
 
   updateFilms(id, data) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
-
-    return fetch(`https://16.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
+    return this._load({
+      url: `movies/${id}`,
       method: `PUT`,
       body: JSON.stringify(Movie.toRAW(data)),
-      headers
-    })
-    .then((responce) => {
-      if (responce.status >= 200 || responce.status < 300) {
-        const resp = responce.json();
-        return resp;
-      } else {
-        throw new Error(`A server error has occurred`);
-      }
+      headers: new Headers({"Content-Type": `application/json`})
     })
     .then((film) => {
       const filmsArray = [];
       filmsArray.push(film);
-      return this._getComments(filmsArray, headers);
+      return this._getComments(filmsArray);
     })
     .then((promises) => Promise.all(promises))
     .then((filmData) => {
@@ -55,24 +49,34 @@ const API = class {
     .catch(new Error(`A server error has occurred`));
   }
 
-  _getComments(films, headers) {
+  createComment(film) {
+    console.log(film.comments);
+    return this._load({
+      url: `comment/${film.id}`,
+      method: `POST`,
+      body: JSON.stringify(film.comments[film.comments.length - 1]),
+      headers: new Headers({"Content-Type": `application/json`})
+    });
+  }
+
+  _getComments(films) {
     const newFilms = films.map((item) => {
-      return fetch(`https://16.ecmascript.pages.academy/cinemaddict/comments/${item.id}`, {headers})
-        .then((responce) => {
-          if (responce.ok) {
-            const resp = responce.json();
-            return resp;
-          } else {
-            return [];
-          }
-        })
+      return this._load({url: `comments/${item.id}`})
         .then((comment) => {
           item.comments = comment;
           return item;
-        })
-        .catch(() => []);
+        });
     });
     return newFilms;
+  }
+
+  _load({url, method = `GET`, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(checkStatus)
+      .catch((err) => {
+        throw err;
+      });
   }
 };
 

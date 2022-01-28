@@ -22,9 +22,9 @@ const FILM_CARD_SHOW_BY_BUTTON = 5;
 const header = document.querySelector(`.header`);
 const footerStatistics = document.querySelector(`.footer__statistics`);
 
-export const renderFilms = (container, films, onDataChange, onViewChange) => {
+export const renderFilms = (container, films, onDataChange, onViewChange, api) => {
   return films.map((film) => {
-    const movieController = new MovieController(container, onDataChange, onViewChange);
+    const movieController = new MovieController(container, onDataChange, onViewChange, api);
 
     movieController.render(film);
 
@@ -82,7 +82,7 @@ export default class PageController {
       return;
     }
 
-    const newFilms = renderFilms(this._filmListMainContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(this._filmListMainContainer, this._films.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange, this._api);
     this._showedFilmControllers = this._showedMainFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     render(filmlist, this._buttonShowMore);
@@ -107,7 +107,7 @@ export default class PageController {
     this._newTopRatedFilms = renderFilms(topRaitedContainer, this._films
       .slice()
       .sort((a, b) => b.rating - a.rating)
-      .slice(0, 2), this._onDataChange, this._onViewChange);
+      .slice(0, 2), this._onDataChange, this._onViewChange, this._api);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newTopRatedFilms);
   }
 
@@ -122,7 +122,7 @@ export default class PageController {
     this._newMostCommentedFilms = renderFilms(mostCommentedContainer, this._films
       .slice()
       .sort((a, b) => b.comments.length - a.comments.length)
-      .slice(0, 2), this._onDataChange, this._onViewChange);
+      .slice(0, 2), this._onDataChange, this._onViewChange, this._api);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newMostCommentedFilms);
     console.log(this._showedFilmControllers);
   }
@@ -132,7 +132,7 @@ export default class PageController {
       this._removeFilms();
       this._filmCardsSort = renderSortFilms(this._filmsModel.getFilms(), sortType);
 
-      const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
+      const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(FILM_CARDS_START, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange, this._api);
       this._showedMainFilmControllers = newFilms;
       this._showedFilmControllers = newFilms.concat(this._newTopRatedFilms, this._newMostCommentedFilms);
 
@@ -145,7 +145,7 @@ export default class PageController {
       let prevFilmCount = this._filmAmount;
       this._filmAmount += FILM_CARD_SHOW_BY_BUTTON;
 
-      const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(prevFilmCount, this._filmAmount), this._onDataChange, this._onViewChange);
+      const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(prevFilmCount, this._filmAmount), this._onDataChange, this._onViewChange, this._api);
       this._showedMainFilmControllers = this._showedMainFilmControllers.concat(newFilms);
       this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
@@ -200,7 +200,6 @@ export default class PageController {
       this._api.updateFilms(oldData.id, newData)
         .then((filmModel) => {
           const isSucces = this._filmsModel.updateFilm(oldData.id, filmModel);
-          console.log(filmModel)
           if (isSucces) {
             const filmController = this._showedFilmControllers.filter((item) => item.filmCards.film.id === oldData.id);
             filmController.forEach((item) => item.render(filmModel));
@@ -223,7 +222,7 @@ export default class PageController {
   _onFilterChange() {
     this._removeFilms();
     this._filmCardsSort = this._filmsModel.getFilms();
-    const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(0, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(this._filmListMainContainer, this._filmCardsSort.slice(0, FILM_CARDS_AMOUNT), this._onDataChange, this._onViewChange, this._api);
 
     this._replaceSort();
 

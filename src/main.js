@@ -8,10 +8,11 @@ import MessageLoading from "./components/loading-message.js";
 
 
 const AUTHORIZATION = `Basic joifoin45j`;
+const END_POINT = `https://16.ecmascript.pages.academy/cinemaddict`;
 
 const main = document.querySelector(`.main`);
 
-const api = new API(AUTHORIZATION);
+const api = new API(AUTHORIZATION, END_POINT);
 const movieModel = new Movies();
 
 const siteMenuController = new SiteMenuController(main, movieModel);
