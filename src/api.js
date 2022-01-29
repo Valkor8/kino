@@ -49,12 +49,11 @@ const API = class {
     .catch(new Error(`A server error has occurred`));
   }
 
-  createComment(film) {
-    console.log(film.comments);
+  createComment(id, comment) {
     return this._load({
-      url: `comment/${film.id}`,
+      url: `comments/${id}`,
       method: `POST`,
-      body: JSON.stringify(film.comments[film.comments.length - 1]),
+      body: JSON.stringify(comment),
       headers: new Headers({"Content-Type": `application/json`})
     });
   }
