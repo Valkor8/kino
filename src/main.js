@@ -53,5 +53,3 @@ api.getFilms()
 
 pageController._renderOnButtonClick();
 pageController._setSortTypeChangeHadnler();
-
-
