@@ -56,12 +56,9 @@ export default class MovieController {
           author: null,
           date: new Date().toISOString(),
         };
-        // film.comments.push(comment);
         this._api.createComment(film.id, comment)
           .then((data) => {
-            console.log(data);
             film.comments = data.comments;
-            console.log(film);
             this._onDataChange(null, film);
           });
       }
